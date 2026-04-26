@@ -1,0 +1,1091 @@
+/* =====================================================
+   VINIE — Dealer Portal Styles (Monday.com-inspired)
+   ===================================================== */
+
+/* ── Body override for dealer pages ──────────────────── */
+.dealer-body {
+    background: #F6F7FB;
+    min-height: 100vh;
+}
+
+/* Profile button dealer portal overrides */
+.dealer-body .nav-profile-btn {
+    border-color: #D5D5FF;
+    background: #EEEEFF;
+    color: #6161FF;
+}
+.dealer-body .nav-profile-btn:hover {
+    background: #D5D5FF;
+}
+
+/* ── Auth panel ────────────────────────────────────────── */
+.dp-auth-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 64px);
+    padding: 2rem 1.5rem;
+}
+
+.dp-auth-card {
+    background: #FFFFFF;
+    border-radius: 18px;
+    box-shadow: 0 16px 48px rgba(27,27,64,0.12);
+    padding: 40px;
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.dp-auth-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.dp-auth-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    text-align: center;
+    color: #1B1B40;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.4rem;
+}
+
+.dp-auth-sub {
+    text-align: center;
+    color: #676879;
+    font-size: 0.95rem;
+    margin-bottom: 1.75rem;
+}
+
+/* Auth tabs — pill switcher */
+.dp-auth-tabs {
+    display: flex;
+    background: #F6F7FB;
+    border-radius: 50px;
+    padding: 4px;
+    margin-bottom: 1.75rem;
+    gap: 4px;
+    border: 1px solid #E2E4F0;
+}
+
+.dp-tab {
+    flex: 1;
+    padding: 0.55rem;
+    border: none;
+    background: transparent;
+    border-radius: 50px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #676879;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+.dp-tab.active {
+    background: #FFFFFF;
+    color: #6161FF;
+    box-shadow: 0 1px 3px rgba(27,27,64,0.10);
+}
+
+/* ── Forms ─────────────────────────────────────────────── */
+.dp-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.dp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.dp-field label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #1B1B40;
+}
+
+.dp-field input,
+.dp-field select,
+.dp-field textarea {
+    padding: 12px 16px;
+    border: 1.5px solid #E2E4F0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: #1B1B40;
+    background: #FFFFFF;
+    transition: border-color 0.15s;
+    outline: none;
+}
+.dp-field input:focus,
+.dp-field select:focus,
+.dp-field textarea:focus {
+    border-color: #6161FF;
+    box-shadow: 0 0 0 3px rgba(97,97,255,0.08);
+}
+.dp-field textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.dp-submit {
+    width: 100%;
+    padding: 0.85rem;
+    font-size: 1rem;
+    margin-top: 0.25rem;
+    background: #6161FF;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
+}
+.dp-submit:hover {
+    background: #4e4ed6;
+    box-shadow: 0 8px 24px rgba(97,97,255,0.25);
+    transform: translateY(-1px);
+}
+.dp-submit:active {
+    transform: translateY(0);
+}
+
+.dp-error {
+    background: #FEF2F2;
+    color: #DC2626;
+    border-radius: 10px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #FECACA;
+}
+
+.dp-success {
+    background: #F0FDF4;
+    color: #16A34A;
+    border-radius: 10px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #BBF7D0;
+}
+
+/* Status messages */
+.status-success {
+    background: #F0FDF4;
+    color: #16A34A;
+    border: 1px solid #BBF7D0;
+    border-radius: 10px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.status-error {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+    border-radius: 10px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* ── Dashboard layout ──────────────────────────────────── */
+.dp-dashboard {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+}
+
+.dp-dash-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Dashboard header */
+.dp-dash-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2E4F0;
+    padding: 20px 32px;
+    border-radius: 14px;
+}
+
+.dp-dash-title,
+.dealership-name {
+    font-size: clamp(1.4rem, 3vw, 1.75rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #1B1B40;
+    margin-bottom: 0.2rem;
+}
+
+.dp-dash-sub {
+    color: #676879;
+    font-size: 0.95rem;
+}
+
+.dp-dash-plan-badge,
+.plan-badge {
+    background: #6161FF;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.78rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 50px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    align-self: flex-start;
+}
+
+/* ── Metrics grid ──────────────────────────────────────── */
+.dp-metrics,
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.dp-metric-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E4F0;
+    border-radius: 14px;
+    padding: 20px 24px;
+    text-align: center;
+    transition: box-shadow 0.2s;
+}
+.dp-metric-card:hover {
+    box-shadow: 0 8px 24px rgba(27,27,64,0.10);
+}
+
+.dp-metric-num,
+.metric-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #6161FF;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+}
+
+.dp-metric-label,
+.metric-label {
+    font-size: 0.75rem;
+    color: #676879;
+    font-weight: 600;
+    margin-top: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.dp-metric-trend {
+    font-size: 0.72rem;
+    color: #9CA3AF;
+    font-weight: 500;
+    margin-top: 0.2rem;
+    font-style: italic;
+}
+
+/* ── Feature cards grid ────────────────────────────────── */
+.dp-cards,
+.feature-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.dp-card,
+.feature-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E4F0;
+    border-radius: 16px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.dp-card:hover,
+.feature-card:hover {
+    box-shadow: 0 8px 24px rgba(27,27,64,0.10);
+    transform: translateY(-1px);
+}
+
+.dp-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+}
+
+.dp-icon-blue   { background: #EEEEFF; color: #6161FF; }
+.dp-icon-green  { background: #F0FDF4; color: #16A34A; }
+.dp-icon-purple { background: #F5F3FF; color: #7C3AED; }
+.dp-icon-orange { background: #FFF7ED; color: #EA580C; }
+.dp-icon-teal   { background: #ECFEFF; color: #0F766E; }
+
+.dp-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.dp-card-body h3,
+.feature-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1B1B40;
+    margin: 0;
+}
+
+.dp-card-body p {
+    font-size: 0.9rem;
+    color: #676879;
+    line-height: 1.55;
+}
+
+.dp-card-btn {
+    margin-top: 1rem;
+    align-self: flex-start;
+    font-size: 0.88rem;
+    padding: 0.55rem 1.1rem;
+    background: #6161FF;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: background 0.15s, box-shadow 0.15s;
+}
+.dp-card-btn:hover {
+    background: #4e4ed6;
+    box-shadow: 0 4px 12px rgba(97,97,255,0.22);
+}
+
+.dp-card-hint {
+    font-size: 0.78rem !important;
+    color: #676879;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+/* ── Setup Checklist ───────────────────────────────────── */
+.dp-checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+
+.dp-checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 10px 14px;
+    background: #F6F7FB;
+    border-radius: 10px;
+    border: 1px solid #E2E4F0;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.dp-checklist-item.dp-check-done {
+    background: #F0FDF4;
+    border-color: #BBF7D0;
+}
+
+.dp-check-icon {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #D1D5DB;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+    transition: color 0.15s;
+}
+
+.dp-checklist-item.dp-check-done .dp-check-icon {
+    color: #16A34A;
+}
+
+.dp-check-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #676879;
+    transition: color 0.15s;
+}
+
+.dp-checklist-item.dp-check-done .dp-check-label {
+    color: #1B1B40;
+}
+
+/* ── Activity badges ───────────────────────────────────── */
+.dp-activity-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 50px;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+    letter-spacing: 0.03em;
+}
+
+.dp-badge-inactive {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+}
+
+.dp-badge-low {
+    background: #FFFBEB;
+    color: #B45309;
+    border: 1px solid #FDE68A;
+}
+
+/* Per-rep scan meta */
+.dp-team-scans {
+    font-size: 0.75rem;
+    color: #9CA3AF;
+    font-weight: 400;
+    margin-left: 0.5rem;
+}
+
+/* Inline forms inside cards */
+.dp-inline-form {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #E2E4F0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.dp-form-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.dp-close-btn {
+    align-self: flex-start;
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1.5px solid #E2E4F0;
+    border-radius: 50px;
+    font-family: inherit;
+    font-weight: 600;
+    color: #676879;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+}
+.dp-close-btn:hover {
+    border-color: #676879;
+    color: #1B1B40;
+}
+
+/* ── Team panel ────────────────────────────────────────── */
+.dp-team-invite h4,
+.dp-team-list h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1B1B40;
+    margin-bottom: 0.75rem;
+}
+
+.dp-seat-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 1rem;
+}
+
+.dp-seat-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E4F0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.dp-seat-label {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #8C8FA3;
+}
+
+.dp-seat-card strong {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #1B1B40;
+}
+
+/* Invite form */
+.dp-invite-form,
+.invite-form {
+    background: #F6F7FB;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.dp-invite-form input,
+.dp-invite-form select,
+.invite-form input,
+.invite-form select {
+    padding: 10px 14px;
+    border: 1.5px solid #E2E4F0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #1B1B40;
+    background: #FFFFFF;
+    outline: none;
+    flex: 1;
+    min-width: 140px;
+    transition: border-color 0.15s;
+}
+.dp-invite-form input:focus,
+.dp-invite-form select:focus,
+.invite-form input:focus,
+.invite-form select:focus {
+    border-color: #6161FF;
+    box-shadow: 0 0 0 3px rgba(97,97,255,0.08);
+}
+
+/* Team member rows */
+.dp-team-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 14px 0;
+    border-bottom: 1px solid #E2E4F0;
+}
+.dp-team-row:last-child { border-bottom: none; }
+
+.dp-team-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.dp-team-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #1B1B40;
+}
+.dp-team-email {
+    font-size: 0.78rem;
+    color: #676879;
+}
+
+/* Role badges */
+.dp-team-role {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: 50px;
+    text-transform: capitalize;
+    letter-spacing: 0.02em;
+}
+.dp-role-admin      { background: #FEF9C3; color: #854D0E; }
+.dp-role-manager    { background: #EDE9FE; color: #6D28D9; }
+.dp-role-salesperson { background: #EEEEFF; color: #6161FF; }
+
+/* Status toggle buttons */
+.dp-toggle-btn {
+    font-size: 0.78rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 50px;
+    border: 1.5px solid #E2E4F0;
+    background: transparent;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    color: #676879;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+.dp-toggle-btn.active-state {
+    background: #F0FDF4;
+    border-color: #BBF7D0;
+    color: #16A34A;
+}
+.dp-toggle-btn:not(.active-state):hover {
+    border-color: #676879;
+    color: #1B1B40;
+}
+
+.dp-loading {
+    color: #676879;
+    font-size: 0.9rem;
+}
+
+/* ── Billing section ───────────────────────────────────── */
+.dp-billing-btns {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.dp-billing-note {
+    font-size: 0.85rem;
+    color: #676879;
+    line-height: 1.55;
+}
+
+/* ── Plan cards (horizontal) ───────────────────────────── */
+.dp-plan-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.dp-plan-card {
+    border: 1.5px solid #E2E4F0;
+    border-radius: 14px;
+    padding: 20px 24px;
+    background: #FFFFFF;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    column-gap: 1rem;
+    row-gap: 0.6rem;
+    align-items: start;
+    transition: border-color 0.18s, box-shadow 0.18s;
+}
+.dp-plan-card:hover {
+    border-color: #6161FF;
+    box-shadow: 0 4px 16px rgba(97,97,255,0.10);
+}
+
+.dp-plan-popular,
+.dp-plan-card.selected {
+    border-color: #6161FF;
+    background: #EEEEFF;
+    box-shadow: 0 0 0 3px rgba(97,97,255,0.12);
+}
+
+.dp-plan-popular-badge {
+    position: absolute;
+    top: -10px;
+    left: 1rem;
+    background: #6161FF;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    padding: 0.2rem 0.65rem;
+    border-radius: 50px;
+}
+
+.dp-plan-card-top {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.dp-plan-name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #1B1B40;
+}
+
+.dp-plan-desc {
+    font-size: 0.8rem;
+    color: #676879;
+}
+
+.dp-plan-price {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #1B1B40;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+    text-align: right;
+    line-height: 1.1;
+}
+.dp-plan-price span {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #676879;
+}
+
+.dp-plan-features {
+    grid-column: 1 / -1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+}
+.dp-plan-features li {
+    font-size: 0.82rem;
+    color: #676879;
+    padding-left: 1rem;
+    position: relative;
+}
+.dp-plan-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #6161FF;
+    font-weight: 700;
+}
+
+.dp-plan-actions {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.dp-plan-btn {
+    font-size: 0.82rem;
+    padding: 0.6rem 0.75rem;
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 50px;
+    border: none;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-plan {
+    background: #6161FF;
+    color: #FFFFFF;
+    border-radius: 50px;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s, box-shadow 0.15s;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.88rem;
+}
+.btn-plan:hover {
+    background: #4e4ed6;
+    box-shadow: 0 4px 12px rgba(97,97,255,0.22);
+}
+
+.dp-save-tag {
+    background: #DCFCE7;
+    color: #15803D;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: 50px;
+    margin-left: 0.25rem;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* ── Support form ──────────────────────────────────────── */
+.dp-support-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.dp-support-form input,
+.dp-support-form select,
+.dp-support-form textarea {
+    padding: 12px 16px;
+    border: 1.5px solid #E2E4F0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: #1B1B40;
+    background: #FFFFFF;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.dp-support-form input:focus,
+.dp-support-form select:focus,
+.dp-support-form textarea:focus {
+    border-color: #6161FF;
+    box-shadow: 0 0 0 3px rgba(97,97,255,0.08);
+}
+.dp-support-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* ── Inventory uploads ──────────────────────────────────── */
+.dp-inventory-intro,
+.dp-upload-jobs-head,
+.dp-upload-row-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+}
+
+.dp-inventory-intro h4,
+.dp-upload-jobs h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1B1B40;
+    margin: 0 0 0.35rem;
+}
+
+.dp-inventory-intro p,
+.dp-upload-meta,
+.dp-upload-progress,
+.dp-upload-date {
+    margin: 0;
+    font-size: 0.84rem;
+    color: #676879;
+    line-height: 1.55;
+}
+
+.dp-inventory-badge {
+    background: #ECFEFF;
+    border: 1px solid #99F6E4;
+    color: #0F766E;
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.dp-inventory-upload,
+.dp-upload-jobs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.dp-file-drop {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    border: 1.5px dashed #C7D2FE;
+    border-radius: 14px;
+    padding: 18px 20px;
+    background: #F8FAFF;
+    cursor: pointer;
+}
+
+.dp-file-drop input {
+    display: none;
+}
+
+.dp-file-drop-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1B1B40;
+}
+
+.dp-file-drop-sub {
+    font-size: 0.82rem;
+    color: #676879;
+}
+
+.dp-inventory-preview {
+    border: 1px solid #E2E4F0;
+    border-radius: 12px;
+    padding: 16px 18px;
+    background: #F6F7FB;
+    gap: 0.45rem;
+}
+
+.dp-inventory-preview strong {
+    font-size: 0.95rem;
+    color: #1B1B40;
+}
+
+.dp-upload-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.dp-upload-row {
+    border: 1px solid #E2E4F0;
+    border-radius: 12px;
+    background: #FFFFFF;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.dp-upload-row-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1B1B40;
+}
+
+.dp-upload-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.28rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.dp-upload-status.is-queued {
+    background: #EEF2FF;
+    color: #4338CA;
+}
+
+.dp-upload-status.is-processing {
+    background: #ECFEFF;
+    color: #0F766E;
+}
+
+.dp-upload-status.is-success {
+    background: #DCFCE7;
+    color: #166534;
+}
+
+.dp-upload-status.is-warning {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.dp-upload-status.is-error {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+.dp-upload-errors {
+    margin-top: 0.15rem;
+}
+
+.dp-upload-errors summary {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #B91C1C;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.dp-upload-errors summary::-webkit-details-marker { display: none; }
+
+.dp-upload-errors summary::before {
+    content: '▶';
+    font-size: 0.6rem;
+    transition: transform 0.15s;
+}
+
+.dp-upload-errors[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.dp-upload-errors ul {
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.dp-upload-errors li {
+    display: flex;
+    gap: 0.6rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
+}
+
+.dp-upload-error-vin {
+    font-family: monospace;
+    font-weight: 700;
+    color: #B91C1C;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.dp-upload-error-msg {
+    color: #6B7280;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 700px) {
+    .dp-metrics,
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .dp-cards,
+    .feature-cards {
+        grid-template-columns: 1fr;
+    }
+    .dp-dash-header {
+        flex-direction: column;
+        padding: 16px 20px;
+    }
+    .dp-invite-form,
+    .invite-form {
+        flex-direction: column;
+    }
+    .dp-invite-form input,
+    .dp-invite-form select,
+    .invite-form input,
+    .invite-form select {
+        min-width: 100%;
+    }
+    .dp-auth-card {
+        padding: 28px 20px;
+    }
+    .dp-plan-actions {
+        grid-template-columns: 1fr;
+    }
+    .dp-seat-summary {
+        grid-template-columns: 1fr;
+    }
+    .dp-inventory-intro,
+    .dp-upload-jobs-head,
+    .dp-upload-row-head {
+        flex-direction: column;
+    }
+}

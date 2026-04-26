@@ -1,0 +1,188 @@
+/* =====================================================
+   VINIE — Legal Pages (Monday.com-inspired)
+   ===================================================== */
+
+/* ── Body for legal pages ──────────────────────────── */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #FFFFFF;
+    color: #1B1B40;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Legal page container ──────────────────────────── */
+.legal-page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 120px 32px 80px;
+}
+
+/* ── Legal header ──────────────────────────────────── */
+.legal-header h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: #1B1B40;
+    line-height: 1.1;
+    margin-bottom: 8px;
+}
+
+.legal-updated {
+    font-size: 13px;
+    color: #676879;
+    font-weight: 500;
+    margin-bottom: 48px;
+    display: block;
+}
+
+/* ── Legal inner ───────────────────────────────────── */
+.legal-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.legal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ── Sections ──────────────────────────────────────── */
+.legal-section,
+.legal-body section {
+    border-top: 1px solid #E2E4F0;
+    padding-top: 32px;
+    margin-top: 32px;
+}
+
+/* ── Headings ──────────────────────────────────────── */
+.legal-body h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #6161FF;
+    letter-spacing: -0.02em;
+    margin-top: 0;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.legal-body h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1B1B40;
+    margin-top: 1.25rem;
+    margin-bottom: 0.4rem;
+}
+
+/* ── Body text ─────────────────────────────────────── */
+.legal-body p {
+    font-size: 15px;
+    color: #676879;
+    line-height: 1.7;
+    margin-bottom: 16px;
+}
+.legal-body p:last-child {
+    margin-bottom: 0;
+}
+
+/* ── Lists ─────────────────────────────────────────── */
+.legal-body ul,
+.legal-body ol {
+    padding-left: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legal-body li {
+    font-size: 15px;
+    color: #676879;
+    line-height: 1.7;
+}
+
+/* ── Links ─────────────────────────────────────────── */
+.legal-body a {
+    color: #6161FF;
+    text-decoration: none;
+    font-weight: 500;
+    transition: text-decoration 0.12s;
+}
+.legal-body a:hover {
+    text-decoration: underline;
+}
+
+/* ── Footer on legal pages ─────────────────────────── */
+.footer {
+    background: #0F0F1A;
+    padding: 32px 2rem;
+}
+
+.footer-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.15s;
+}
+.footer-links a:hover {
+    color: #fff;
+}
+
+.footer-copyright {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.30);
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+}
+
+/* Fallback for footer-bottom pattern */
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 1rem;
+    padding-top: 1rem;
+    text-align: center;
+}
+.footer-bottom p {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.30);
+    margin: 0;
+}
+
+/* ── Responsive ────────────────────────────────────── */
+@media (max-width: 640px) {
+    .legal-page {
+        padding: 96px 20px 64px;
+    }
+
+    .legal-header h1 {
+        font-size: clamp(28px, 8vw, 40px);
+    }
+
+    .legal-body h2 {
+        font-size: 18px;
+    }
+}

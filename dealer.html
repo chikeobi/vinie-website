@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dealer Portal &mdash; VINIE</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dealer.css">
+</head>
+<body class="dealer-body">
+
+    <!-- NAV -->
+    <header class="main-header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">V</span>
+                <span class="logo-text">VINIE</span>
+            </a>
+            <div class="nav-links" id="dealer-nav-links">
+                <div id="nav-profile-wrap" class="nav-profile-wrap" style="display:none;">
+                    <button class="nav-profile-btn" onclick="toggleDealerProfileDropdown(event)" aria-label="Account">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                    </button>
+                    <div class="nav-profile-dropdown" id="dealer-profile-dropdown">
+                        <div class="npd-info">
+                            <div class="npd-name" id="npd-name"></div>
+                            <div class="npd-email" id="npd-email"></div>
+                        </div>
+                        <div class="npd-divider"></div>
+                        <button class="npd-link npd-signout" onclick="signOut()">Sign Out</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- LOADING -->
+    <div id="loading-panel" style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 68px);">
+        <p style="color:var(--gray-2);font-size:0.95rem;">Loading…</p>
+    </div>
+
+    <!-- AUTH PANEL -->
+    <div id="auth-panel" class="dp-auth-wrap" style="display:none;">
+        <div class="dp-auth-card">
+            <div class="dp-auth-logo">
+                <span class="logo-icon">V</span>
+                <span class="logo-text">VINIE</span>
+            </div>
+            <h1 class="dp-auth-title">Dealer Portal</h1>
+            <p class="dp-auth-sub" id="auth-sub">Sign in to manage your dealership</p>
+
+            <!-- Tab toggle -->
+            <div class="dp-auth-tabs">
+                <button class="dp-tab active" id="tab-login" onclick="showTab('login')">Sign In</button>
+                <button class="dp-tab" id="tab-signup" onclick="showTab('signup')" style="display:none;">Create Account</button>
+            </div>
+
+            <!-- Login form -->
+            <form id="form-login" class="dp-form" onsubmit="handleLogin(event)">
+                <div class="dp-field">
+                    <label>Email</label>
+                    <input type="email" id="login-email" placeholder="dealer@example.com" required autocomplete="email">
+                </div>
+                <div class="dp-field">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+                <div id="login-error" class="dp-error" style="display:none;"></div>
+                <button type="submit" class="btn btn-primary dp-submit" id="login-btn">Sign In</button>
+                <p class="checkout-secure">Need access? <a href="index.html#pricing" class="login-inline-link">Choose a plan first</a></p>
+            </form>
+
+            <!-- Signup form -->
+            <form id="form-signup" class="dp-form" style="display:none;" onsubmit="handleSignup(event)">
+                <div class="dp-field">
+                    <label>Full Name</label>
+                    <input type="text" id="signup-name" placeholder="Jane Smith" required autocomplete="name">
+                </div>
+                <div class="dp-field">
+                    <label>Email</label>
+                    <input type="email" id="signup-email" placeholder="dealer@example.com" required autocomplete="email">
+                </div>
+                <div class="dp-field">
+                    <label>Password</label>
+                    <input type="password" id="signup-password" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password">
+                </div>
+                <div class="dp-field">
+                    <label>Dealership Name</label>
+                    <input type="text" id="signup-dealership" placeholder="Your Dealership Name" required>
+                </div>
+                <div id="signup-error" class="dp-error" style="display:none;"></div>
+                <button type="submit" class="btn btn-primary dp-submit" id="signup-btn">Create Account &amp; Continue to Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- DASHBOARD (shown after login) -->
+    <div id="dashboard-panel" class="dp-dashboard" style="display:none;" >
+        <div class="dp-dash-inner">
+
+            <div class="dp-dash-header">
+                <div>
+                    <h1 class="dp-dash-title">Dealer Dashboard</h1>
+                    <p id="dp-dealer-name" class="dp-dash-sub">Loading...</p>
+                </div>
+                <div class="dp-dash-plan-badge" id="dp-plan-badge"></div>
+            </div>
+
+            <!-- Metrics row -->
+            <div class="dp-metrics" id="dp-metrics">
+                <div class="dp-metric-card">
+                    <div class="dp-metric-num" id="m-total">—</div>
+                    <div class="dp-metric-label">Total Members</div>
+                </div>
+                <div class="dp-metric-card">
+                    <div class="dp-metric-num" id="m-active">—</div>
+                    <div class="dp-metric-label">Active Reps</div>
+                </div>
+                <div class="dp-metric-card">
+                    <div class="dp-metric-num" id="m-inactive">—</div>
+                    <div class="dp-metric-label">Inactive</div>
+                </div>
+                <div class="dp-metric-card">
+                    <div class="dp-metric-num" id="m-scans">—</div>
+                    <div class="dp-metric-label">Total Scans</div>
+                    <div class="dp-metric-trend" id="m-scans-trend"></div>
+                </div>
+                <div class="dp-metric-card">
+                    <div class="dp-metric-num" id="m-pending">—</div>
+                    <div class="dp-metric-label">Pending Invites</div>
+                </div>
+                <div class="dp-metric-card">
+                    <div class="dp-metric-num" id="m-avg">—</div>
+                    <div class="dp-metric-label">Avg Scans / Rep</div>
+                </div>
+            </div>
+
+            <!-- Feature cards -->
+            <div class="dp-cards">
+
+                <!-- Support Request -->
+                <div class="dp-card" id="card-support">
+                    <div class="dp-card-icon dp-icon-blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <div class="dp-card-body">
+                        <h3>Submit Support Request</h3>
+                        <p>Get help from our team. Average response time under 24 hours.</p>
+                        <button class="btn btn-primary dp-card-btn" onclick="showSupport()">Open Support Form</button>
+                    </div>
+
+                    <!-- Support form (hidden by default) -->
+                    <div id="support-form-wrap" class="dp-inline-form" style="display:none;">
+                        <form onsubmit="submitSupport(event)">
+                            <div class="dp-field">
+                                <label>Category</label>
+                                <select id="support-category">
+                                    <option>Billing</option>
+                                    <option>Technical Issue</option>
+                                    <option>Team Management</option>
+                                    <option>Feature Request</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="dp-field">
+                                <label>Message</label>
+                                <textarea id="support-message" rows="4" placeholder="Describe your issue..." required></textarea>
+                            </div>
+                            <div id="support-status" class="dp-success" style="display:none;">Request submitted. We'll be in touch shortly.</div>
+                            <div class="dp-form-actions">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" class="btn btn-ghost" onclick="hideSupport()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Setup Checklist -->
+                <div class="dp-card" id="card-checklist">
+                    <div class="dp-card-icon dp-icon-green">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    </div>
+                    <div class="dp-card-body">
+                        <h3>Setup Checklist</h3>
+                        <p>Complete these steps to get your team fully onboarded.</p>
+                        <div class="dp-checklist" id="setup-checklist">
+                            <div class="dp-checklist-item" id="check-subscription">
+                                <span class="dp-check-icon">○</span>
+                                <span class="dp-check-label">Subscription active</span>
+                            </div>
+                            <div class="dp-checklist-item" id="check-members">
+                                <span class="dp-check-icon">○</span>
+                                <span class="dp-check-label">3 or more members invited</span>
+                            </div>
+                            <div class="dp-checklist-item" id="check-manager">
+                                <span class="dp-check-icon">○</span>
+                                <span class="dp-check-label">Manager or admin assigned</span>
+                            </div>
+                            <div class="dp-checklist-item" id="check-scan">
+                                <span class="dp-check-icon">○</span>
+                                <span class="dp-check-label">First VIN scan completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Management -->
+                <div class="dp-card" id="card-team">
+                    <div class="dp-card-icon dp-icon-purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div class="dp-card-body">
+                        <h3>Manage Team Access</h3>
+                        <p id="team-seat-copy">Invite salespeople, assign roles, and manage team access.</p>
+                        <button class="btn btn-primary dp-card-btn" onclick="showTeam()">Manage Team</button>
+                    </div>
+
+                    <!-- Team panel (hidden by default) -->
+                    <div id="team-panel" class="dp-inline-form" style="display:none;">
+                        <div class="dp-seat-summary" id="seat-summary-panel">
+                            <div class="dp-seat-card">
+                                <span class="dp-seat-label">Seats Included</span>
+                                <strong id="seat-limit-value">—</strong>
+                            </div>
+                            <div class="dp-seat-card">
+                                <span class="dp-seat-label">Allocated</span>
+                                <strong id="seat-allocated-value">—</strong>
+                            </div>
+                            <div class="dp-seat-card">
+                                <span class="dp-seat-label">Left</span>
+                                <strong id="seat-remaining-value">—</strong>
+                            </div>
+                        </div>
+                        <div class="dp-team-invite">
+                            <h4>Invite Member</h4>
+                            <form onsubmit="inviteMember(event)" class="dp-invite-form">
+                                <input type="email" id="invite-email" placeholder="Email address" required>
+                                <select id="invite-role">
+                                    <option value="salesperson">Salesperson</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary">Send Invite</button>
+                            </form>
+                            <div id="invite-status" class="dp-success" style="display:none;"></div>
+                        </div>
+                        <div class="dp-team-list" id="team-list">
+                            <h4>Team Members</h4>
+                            <div id="team-list-inner"><p class="dp-loading">Loading...</p></div>
+                        </div>
+                        <button type="button" class="btn btn-ghost dp-close-btn" onclick="hideTeam()">Close</button>
+                    </div>
+                </div>
+
+                <!-- Inventory Pipeline -->
+                <div class="dp-card" id="card-inventory">
+                    <div class="dp-card-icon dp-icon-teal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M3 7h18"/><path d="M6 12h12"/><path d="M10 17h4"/><rect x="3" y="4" width="18" height="16" rx="2"/></svg>
+                    </div>
+                    <div class="dp-card-body">
+                        <h3>Bulk Inventory Pipeline</h3>
+                        <p>Upload a CSV of VINs and Vinie will decode, enrich, and publish shared inventory records into the mobile app pipeline automatically.</p>
+                        <button class="btn btn-primary dp-card-btn" onclick="showInventoryUpload()">Open Upload Panel</button>
+                        <p class="dp-card-hint" id="inventory-summary-copy">No inventory uploads yet. CSV uploads will flow into the shared app pipeline.</p>
+                    </div>
+
+                    <div id="inventory-panel" class="dp-inline-form" style="display:none;">
+                        <div class="dp-inventory-intro">
+                            <div>
+                                <h4>Upload inventory CSV</h4>
+                                <p>Include a <code>VIN</code> column or any cells containing 17-character VINs. Each upload is limited to 100 unique VINs per job.</p>
+                            </div>
+                            <div class="dp-inventory-badge">Shared With App Pipeline</div>
+                        </div>
+
+                        <form class="dp-inventory-upload" onsubmit="submitInventoryCsv(event)">
+                            <label class="dp-file-drop">
+                                <input type="file" id="inventory-file" accept=".csv,text/csv" onchange="previewInventoryCsv()">
+                                <span class="dp-file-drop-title">Choose CSV file</span>
+                                <span class="dp-file-drop-sub" id="inventory-file-copy">No file selected</span>
+                            </label>
+                            <div id="inventory-preview" class="dp-inventory-preview" style="display:none;"></div>
+                            <div id="inventory-status" style="display:none;"></div>
+                            <div class="dp-form-actions">
+                                <button type="submit" class="btn btn-primary">Queue VINs</button>
+                                <button type="button" class="btn btn-ghost" onclick="previewInventoryCsv()">Preview</button>
+                                <button type="button" class="btn btn-ghost dp-close-btn" onclick="hideInventoryUpload()">Close</button>
+                            </div>
+                        </form>
+
+                        <div class="dp-upload-jobs">
+                            <div class="dp-upload-jobs-head">
+                                <h4>Recent uploads</h4>
+                                <button type="button" class="btn btn-ghost" onclick="refreshInventoryUploads()">Refresh</button>
+                            </div>
+                            <div id="inventory-uploads-list" class="dp-upload-list"><p class="dp-loading">No uploads yet.</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Billing & Plan -->
+                <div class="dp-card" id="card-billing">
+                    <div class="dp-card-icon dp-icon-orange">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    </div>
+                    <div class="dp-card-body">
+                        <h3>Billing &amp; Plan</h3>
+                        <p id="billing-desc">Manage your subscription, payment method, and invoices.</p>
+                        <div class="dp-billing-btns">
+                            <button class="btn btn-primary dp-card-btn" onclick="showBilling()">Manage Billing</button>
+                            <button class="btn btn-ghost dp-card-btn" onclick="showBilling()">Change Plan</button>
+                        </div>
+                    </div>
+
+                    <!-- Billing panel (hidden by default) -->
+                    <div id="billing-panel" class="dp-inline-form" style="display:none;">
+                        <h4>Select a Plan</h4>
+                        <p class="dp-billing-note">Choose a plan below to subscribe or switch. You'll be taken to Stripe to complete payment securely.</p>
+
+                        <div class="dp-plan-cards">
+                            <!-- Starter -->
+                            <div class="dp-plan-card" id="plan-starter">
+                                <div class="dp-plan-card-top">
+                                    <div class="dp-plan-name">Base</div>
+                                    <div class="dp-plan-desc">Up to 15 users</div>
+                                </div>
+                                <div class="dp-plan-price">$299<span>/mo</span></div>
+                                <ul class="dp-plan-features">
+                                    <li>Up to 15 users</li>
+                                    <li>Unlimited VIN scans</li>
+                                    <li>iOS &amp; Android app</li>
+                                </ul>
+                                <div class="dp-plan-actions">
+                                    <button class="btn btn-plan dp-plan-btn" onclick="subscribeToPlan('starter','monthly')">Monthly · $299/mo</button>
+                                    <button class="btn btn-ghost dp-plan-btn" onclick="subscribeToPlan('starter','yearly')">Annual · $2,976/yr <span class="dp-save-tag">Save 17%</span></button>
+                                </div>
+                            </div>
+
+                            <!-- Pro -->
+                            <div class="dp-plan-card dp-plan-popular" id="plan-pro">
+                                <div class="dp-plan-popular-badge">MOST POPULAR</div>
+                                <div class="dp-plan-card-top">
+                                    <div class="dp-plan-name">Pro</div>
+                                    <div class="dp-plan-desc">Up to 40 users</div>
+                                </div>
+                                <div class="dp-plan-price">$499<span>/mo</span></div>
+                                <ul class="dp-plan-features">
+                                    <li>Up to 40 users</li>
+                                    <li>Advanced sales insights</li>
+                                    <li>Market comparison data</li>
+                                    <li>Objection handling</li>
+                                </ul>
+                                <div class="dp-plan-actions">
+                                    <button class="btn btn-primary dp-plan-btn" onclick="subscribeToPlan('pro','monthly')">Monthly · $499/mo</button>
+                                    <button class="btn btn-ghost dp-plan-btn" onclick="subscribeToPlan('pro','yearly')">Annual · $4,968/yr <span class="dp-save-tag">Save 17%</span></button>
+                                </div>
+                            </div>
+
+                            <!-- Performance -->
+                            <div class="dp-plan-card" id="plan-performance">
+                                <div class="dp-plan-card-top">
+                                    <div class="dp-plan-name">Prime</div>
+                                    <div class="dp-plan-desc">Up to 100 users</div>
+                                </div>
+                                <div class="dp-plan-price">$899<span>/mo</span></div>
+                                <ul class="dp-plan-features">
+                                    <li>Up to 100 users</li>
+                                    <li>Priority AI processing</li>
+                                    <li>Sales analytics</li>
+                                    <li>Priority support</li>
+                                </ul>
+                                <div class="dp-plan-actions">
+                                    <button class="btn btn-plan dp-plan-btn" onclick="subscribeToPlan('performance','monthly')">Monthly · $899/mo</button>
+                                    <button class="btn btn-ghost dp-plan-btn" onclick="subscribeToPlan('performance','yearly')">Annual · $8,952/yr <span class="dp-save-tag">Save 17%</span></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="billing-status" style="display:none;"></div>
+                        <button type="button" class="btn btn-ghost dp-close-btn" onclick="hideBilling()">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import {
+            getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+            signOut as fbSignOut, onAuthStateChanged
+        } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+        import {
+            getFirestore, doc, getDoc, getDocs, setDoc, updateDoc, addDoc,
+            collection, query, where, orderBy, limit, onSnapshot, serverTimestamp, writeBatch
+        } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+        import {
+            getFunctions, httpsCallable
+        } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkKXLY31JEdJw70h0mFJfNRcF6cK_rr6o",
+            authDomain: "vinie-7c225.firebaseapp.com",
+            projectId: "vinie-7c225",
+            storageBucket: "vinie-7c225.firebasestorage.app",
+            messagingSenderId: "874805271326",
+            appId: "1:874805271326:ios:899c7a9f2543981375c70f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const functions = getFunctions(app, 'us-central1');
+        const PLAN_SEAT_LIMITS = { starter: 15, pro: 40, performance: 100 };
+        const MAX_INVENTORY_UPLOAD_VINS = 100;
+
+        let currentUser = null;
+        let currentBundle = null;
+        let currentSeatSummary = null;
+        let pendingInventoryUpload = null;
+        let inventoryUnsubscribe = null;
+
+        // ── Auth state ──────────────────────────────────────────────────────────
+        onAuthStateChanged(auth, async (user) => {
+            document.getElementById('loading-panel').style.display = 'none';
+            if (user) {
+                currentUser = user;
+                await loadDashboard(user);
+            } else {
+                currentUser = null;
+                currentBundle = null;
+                showAuth();
+            }
+        });
+
+        async function loadDashboard(user) {
+            try {
+                // Load user profile
+                const profileSnap = await getDoc(doc(db, 'users', user.uid));
+                if (!profileSnap.exists()) { showAuth(); return; }
+                const profile = profileSnap.data();
+
+                // Load membership
+                const memberQ = query(collection(db, 'memberships'), where('userId', '==', user.uid), where('isActive', '==', true));
+                const memberSnap = await getDocs(memberQ);
+                if (memberSnap.empty) { showAuth(); return; }
+                const membership = { id: memberSnap.docs[0].id, ...memberSnap.docs[0].data() };
+
+                // Load dealership
+                const dealerSnap = await getDoc(doc(db, 'dealerships', membership.dealershipId));
+                if (!dealerSnap.exists()) { showAuth(); return; }
+                const dealership = { id: dealerSnap.id, ...dealerSnap.data() };
+
+                currentBundle = { profile, membership, dealership };
+
+                // Load metrics
+                const allMembersQ = query(collection(db, 'memberships'), where('dealershipId', '==', dealership.id));
+                const pendingInvitesQ = query(collection(db, 'invites'), where('dealershipId', '==', dealership.id), where('status', '==', 'pending'));
+                const [allSnap, pendingInvitesSnap] = await Promise.all([
+                    getDocs(allMembersQ),
+                    getDocs(pendingInvitesQ),
+                ]);
+                const allMembers = allSnap.docs.map(d => d.data());
+                const active = allMembers.filter(m => m.isActive).length;
+                currentSeatSummary = buildSeatSummary(dealership, active, pendingInvitesSnap.size);
+
+                document.getElementById('m-total').textContent = allMembers.length;
+                document.getElementById('m-active').textContent = active;
+                document.getElementById('m-inactive').textContent = allMembers.length - active;
+                const totalScans = dealership.totalScans ?? 0;
+                document.getElementById('m-scans').textContent = totalScans || '—';
+                if (totalScans > 0 && active > 0) {
+                    document.getElementById('m-scans-trend').textContent = `${Math.round(totalScans / allMembers.length)} per rep avg`;
+                }
+                document.getElementById('m-pending').textContent = pendingInvitesSnap.size || '0';
+                document.getElementById('m-avg').textContent = active > 0 && totalScans > 0 ? Math.round(totalScans / active) : '—';
+                updateSetupChecklist(dealership, allMembers);
+
+                document.getElementById('dp-dealer-name').textContent = dealership.name;
+                document.getElementById('npd-name').textContent = profile.name || user.email;
+                document.getElementById('npd-email').textContent = user.email;
+                document.getElementById('nav-profile-wrap').style.display = 'flex';
+
+                const planLabel = formatPlanLabel(dealership);
+                const status = dealership.subscriptionStatus ?? 'inactive';
+                document.getElementById('dp-plan-badge').textContent = `${planLabel} · ${status}`;
+                updateSeatSummaryUI();
+                document.getElementById('billing-desc').textContent = `Current plan: ${planLabel}. Status: ${status}. ${currentSeatSummary ? `Seats: ${formatSeatValue(currentSeatSummary.seatLimit)} included, ${currentSeatSummary.allocated} allocated, ${formatSeatValue(currentSeatSummary.remaining)} left.` : ''}`;
+
+                document.getElementById('auth-panel').style.display = 'none';
+                document.getElementById('dashboard-panel').style.display = 'block';
+                refreshInventoryUploads().catch((error) => console.error('Inventory uploads failed to load', error));
+
+            } catch (err) {
+                console.error(err);
+                showAuth();
+            }
+        }
+
+        function showAuth() {
+            document.getElementById('auth-panel').style.display = 'flex';
+            document.getElementById('dashboard-panel').style.display = 'none';
+            document.getElementById('loading-panel').style.display = 'none';
+            document.getElementById('nav-profile-wrap').style.display = 'none';
+        }
+
+        // ── Login ───────────────────────────────────────────────────────────────
+        window.handleLogin = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('login-btn');
+            const errEl = document.getElementById('login-error');
+            btn.textContent = 'Signing in…';
+            btn.disabled = true;
+            errEl.style.display = 'none';
+            try {
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (err) {
+                errEl.textContent = friendlyError(err.code);
+                errEl.style.display = 'block';
+                btn.textContent = 'Sign In';
+                btn.disabled = false;
+            }
+        };
+
+        // ── Signup ──────────────────────────────────────────────────────────────
+        window.handleSignup = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('signup-btn');
+            const errEl = document.getElementById('signup-error');
+            btn.textContent = 'Creating account…';
+            btn.disabled = true;
+            errEl.style.display = 'none';
+            try {
+                const name = document.getElementById('signup-name').value.trim();
+                const email = document.getElementById('signup-email').value.trim();
+                const password = document.getElementById('signup-password').value;
+                const dealershipName = document.getElementById('signup-dealership').value.trim();
+
+                const params = new URLSearchParams(window.location.search);
+                const selectedPlan = params.get('plan');
+                const selectedCycle = params.get('cycle') === 'annual' ? 'yearly' : 'monthly';
+                const selectedSeatLimit = selectedPlan === 'prime' || selectedPlan === 'performance'
+                    ? PLAN_SEAT_LIMITS.performance
+                    : selectedPlan === 'pro'
+                        ? PLAN_SEAT_LIMITS.pro
+                        : PLAN_SEAT_LIMITS.starter;
+                const normalizedPlan = selectedPlan === 'base'
+                    ? 'starter'
+                    : selectedPlan === 'prime'
+                        ? 'performance'
+                        : selectedPlan;
+
+                if (!normalizedPlan) {
+                    throw new Error('Please choose a pricing plan before creating an account.');
+                }
+
+                const cred = await createUserWithEmailAndPassword(auth, email, password);
+                const uid = cred.user.uid;
+                const batch = writeBatch(db);
+
+                // Create dealership
+                const dealerRef = doc(collection(db, 'dealerships'));
+                batch.set(dealerRef, {
+                    name: dealershipName,
+                    status: 'active',
+                    subscriptionPlan: normalizedPlan,
+                    seatLimit: selectedSeatLimit,
+                    subscriptionStatus: 'pending_checkout',
+                    billingCycle: selectedCycle,
+                    subscriptionGraceUntil: null,
+                    createdAt: serverTimestamp(),
+                });
+
+                // Create user profile
+                batch.set(doc(db, 'users', uid), {
+                    email,
+                    name,
+                    status: 'active',
+                    currentDealershipId: dealerRef.id,
+                    createdAt: serverTimestamp(),
+                });
+
+                // Create membership
+                batch.set(doc(collection(db, 'memberships')), {
+                    userId: uid,
+                    dealershipId: dealerRef.id,
+                    role: 'admin',
+                    isActive: true,
+                    createdAt: serverTimestamp(),
+                });
+
+                await batch.commit();
+                const createCheckout = httpsCallable(functions, 'createCheckoutSession');
+                const result = await createCheckout({
+                    plan: normalizedPlan,
+                    seatLimit: selectedSeatLimit,
+                    billingCycle: selectedCycle,
+                    successUrl: window.location.origin + '/dealer.html?checkout=success',
+                    cancelUrl: window.location.href,
+                });
+                window.location.href = result.data.url;
+            } catch (err) {
+                errEl.textContent = err?.code ? friendlyError(err.code) : (err?.message || 'Something went wrong. Please try again.');
+                errEl.style.display = 'block';
+                btn.textContent = 'Create Account & Continue to Payment';
+                btn.disabled = false;
+            }
+        };
+
+        // ── Sign out ─────────────────────────────────────────────────────────────
+        window.signOut = async function() {
+            await fbSignOut(auth);
+        };
+
+        // ── Profile dropdown ──────────────────────────────────────────────────────
+        window.toggleDealerProfileDropdown = function(e) {
+            e.stopPropagation();
+            document.getElementById('dealer-profile-dropdown').classList.toggle('open');
+        };
+        document.addEventListener('click', function() {
+            const dd = document.getElementById('dealer-profile-dropdown');
+            if (dd) dd.classList.remove('open');
+        });
+        const _dpDd = document.getElementById('dealer-profile-dropdown');
+        if (_dpDd) _dpDd.addEventListener('click', e => e.stopPropagation());
+
+        // ── Support ──────────────────────────────────────────────────────────────
+        window.showSupport = function() {
+            document.getElementById('support-form-wrap').style.display = 'block';
+        };
+        window.hideSupport = function() {
+            document.getElementById('support-form-wrap').style.display = 'none';
+        };
+        window.submitSupport = async function(e) {
+            e.preventDefault();
+            const category = document.getElementById('support-category').value;
+            const message = document.getElementById('support-message').value;
+            const statusEl = document.getElementById('support-status');
+            try {
+                await addDoc(collection(db, 'supportRequests'), {
+                    userId: currentUser.uid,
+                    dealershipId: currentBundle?.dealership?.id ?? null,
+                    dealershipName: currentBundle?.dealership?.name ?? null,
+                    email: currentUser.email,
+                    category,
+                    message,
+                    status: 'open',
+                    createdAt: serverTimestamp(),
+                });
+                statusEl.style.display = 'block';
+                document.getElementById('support-message').value = '';
+            } catch (err) {
+                statusEl.textContent = 'Failed to submit. Please try again.';
+                statusEl.className = 'dp-error';
+                statusEl.style.display = 'block';
+            }
+        };
+
+        // ── Team ─────────────────────────────────────────────────────────────────
+        window.showTeam = async function() {
+            document.getElementById('team-panel').style.display = 'block';
+            await refreshTeamList();
+        };
+        window.hideTeam = function() {
+            document.getElementById('team-panel').style.display = 'none';
+        };
+
+        async function refreshTeamList() {
+            const inner = document.getElementById('team-list-inner');
+            if (!currentBundle) return;
+            try {
+                const membershipQuery = query(collection(db, 'memberships'), where('dealershipId', '==', currentBundle.dealership.id));
+                const pendingInvitesQuery = query(collection(db, 'invites'), where('dealershipId', '==', currentBundle.dealership.id), where('status', '==', 'pending'));
+                const [snap, pendingInvitesSnap] = await Promise.all([
+                    getDocs(membershipQuery),
+                    getDocs(pendingInvitesQuery),
+                ]);
+                if (snap.empty) { inner.innerHTML = '<p>No members yet.</p>'; return; }
+                const rows = await Promise.all(snap.docs.map(async (d) => {
+                    const m = d.data();
+                    const userSnap = await getDoc(doc(db, 'users', m.userId));
+                    const u = userSnap.exists() ? userSnap.data() : {};
+                    const scanCount = typeof u.totalScans === 'number' ? u.totalScans : null;
+                    const lastScanTs = u.lastScanAt ?? m.lastScanAt ?? null;
+                    let lastScanLabel = '';
+                    if (lastScanTs) {
+                        const d2 = lastScanTs.toDate ? lastScanTs.toDate() : new Date(lastScanTs);
+                        const diffDays = Math.floor((Date.now() - d2.getTime()) / 86400000);
+                        lastScanLabel = diffDays === 0 ? 'Today' : diffDays === 1 ? 'Yesterday' : `${diffDays}d ago`;
+                    }
+                    const isInactive = !m.isActive;
+                    const isLowActivity = m.isActive && scanCount === 0;
+                    const activityBadge = isInactive
+                        ? '<span class="dp-activity-badge dp-badge-inactive">Inactive</span>'
+                        : isLowActivity
+                            ? '<span class="dp-activity-badge dp-badge-low">Low Activity</span>'
+                            : '';
+                    const scanMeta = scanCount !== null
+                        ? `<span class="dp-team-scans">${scanCount} scan${scanCount !== 1 ? 's' : ''}${lastScanLabel ? ' · ' + lastScanLabel : ''}</span>`
+                        : lastScanLabel
+                            ? `<span class="dp-team-scans">Last scan: ${lastScanLabel}</span>`
+                            : '';
+                    return `<div class="dp-team-row">
+                        <div class="dp-team-info">
+                            <span class="dp-team-name">${u.name || '—'}${activityBadge}</span>
+                            <span class="dp-team-email">${u.email || ''}${scanMeta}</span>
+                        </div>
+                        <span class="dp-team-role dp-role-${m.role}">${m.role}</span>
+                        <button class="btn dp-toggle-btn ${m.isActive ? 'active-state' : ''}"
+                            onclick="toggleMember('${d.id}', ${m.isActive})">
+                            ${m.isActive ? 'Active' : 'Activate'}
+                        </button>
+                    </div>`;
+                }));
+                inner.innerHTML = rows.join('');
+                currentSeatSummary = buildSeatSummary(
+                    currentBundle.dealership,
+                    snap.docs.filter((docSnap) => docSnap.data().isActive).length,
+                    pendingInvitesSnap.size,
+                );
+                updateSeatSummaryUI();
+            } catch (err) {
+                inner.innerHTML = '<p>Failed to load members.</p>';
+            }
+        }
+
+        window.toggleMember = async function(membershipId, isActive) {
+            try {
+                const setMembershipAccessState = httpsCallable(functions, 'setMembershipAccessState');
+                await setMembershipAccessState({ membershipId, isActive: !isActive });
+                await refreshTeamList();
+            } catch (err) {
+                const statusEl = document.getElementById('invite-status');
+                statusEl.textContent = err?.message || 'Failed to update member access.';
+                statusEl.className = 'dp-error';
+                statusEl.style.display = 'block';
+            }
+        };
+
+        window.inviteMember = async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('invite-email').value.trim();
+            const role = document.getElementById('invite-role').value;
+            const statusEl = document.getElementById('invite-status');
+            if (!currentBundle) return;
+            try {
+                const createInviteCode = httpsCallable(functions, 'createInviteCode');
+                await createInviteCode({ email, role });
+                statusEl.textContent = `Invite sent to ${email}. They'll receive instructions to join your team.`;
+                statusEl.className = 'dp-success';
+                statusEl.style.display = 'block';
+                document.getElementById('invite-email').value = '';
+                await refreshTeamList();
+            } catch {
+                statusEl.textContent = 'Failed to create invite.';
+                statusEl.className = 'dp-error';
+                statusEl.style.display = 'block';
+            }
+        };
+
+        // ── Inventory uploads ─────────────────────────────────────────────────────
+        function startInventoryListener() {
+            if (inventoryUnsubscribe) return;
+            if (!currentBundle?.dealership?.id) return;
+
+            const uploadsQuery = query(
+                collection(db, 'dealerships', currentBundle.dealership.id, 'inventoryUploads'),
+                orderBy('createdAt', 'desc'),
+                limit(6),
+            );
+
+            inventoryUnsubscribe = onSnapshot(uploadsQuery, (snap) => {
+                renderInventoryUploadList(snap);
+            }, (error) => {
+                console.error('Inventory snapshot error', error);
+            });
+        }
+
+        function stopInventoryListener() {
+            if (inventoryUnsubscribe) {
+                inventoryUnsubscribe();
+                inventoryUnsubscribe = null;
+            }
+        }
+
+        window.showInventoryUpload = function() {
+            document.getElementById('inventory-panel').style.display = 'block';
+            startInventoryListener();
+        };
+
+        window.hideInventoryUpload = function() {
+            document.getElementById('inventory-panel').style.display = 'none';
+            stopInventoryListener();
+        };
+
+        window.previewInventoryCsv = async function() {
+            const input = document.getElementById('inventory-file');
+            const previewEl = document.getElementById('inventory-preview');
+            const file = input?.files?.[0];
+            pendingInventoryUpload = null;
+            setInventoryStatus('', 'success');
+
+            if (!file) {
+                updateInventoryFileLabel();
+                previewEl.style.display = 'none';
+                previewEl.innerHTML = '';
+                return;
+            }
+
+            updateInventoryFileLabel(file);
+
+            try {
+                const text = await file.text();
+                const parsed = parseInventoryCsv(text);
+                pendingInventoryUpload = { ...parsed, fileName: file.name };
+                renderInventoryPreview(parsed);
+
+                if (parsed.vins.length === 0) {
+                    setInventoryStatus('No valid VINs were detected in this file.', 'error');
+                } else if (parsed.vins.length > MAX_INVENTORY_UPLOAD_VINS) {
+                    setInventoryStatus(`This file contains ${parsed.vins.length} unique VINs. Split it into uploads of ${MAX_INVENTORY_UPLOAD_VINS} or fewer VINs.`, 'error');
+                }
+            } catch (error) {
+                previewEl.style.display = 'none';
+                previewEl.innerHTML = '';
+                setInventoryStatus(error?.message || 'Could not read this CSV file.', 'error');
+            }
+        };
+
+        window.submitInventoryCsv = async function(e) {
+            e.preventDefault();
+            const input = document.getElementById('inventory-file');
+            const file = input?.files?.[0];
+
+            if (!pendingInventoryUpload && file) {
+                await window.previewInventoryCsv();
+            }
+
+            if (!pendingInventoryUpload || pendingInventoryUpload.vins.length === 0) {
+                setInventoryStatus('Choose a CSV file that contains at least one valid VIN before uploading.', 'error');
+                return;
+            }
+
+            if (pendingInventoryUpload.vins.length > MAX_INVENTORY_UPLOAD_VINS) {
+                setInventoryStatus(`Uploads are limited to ${MAX_INVENTORY_UPLOAD_VINS} unique VINs at a time.`, 'error');
+                return;
+            }
+
+            try {
+                setInventoryStatus('Queueing inventory upload…', 'success');
+                const submitInventoryUpload = httpsCallable(functions, 'submitInventoryUpload');
+                const result = await submitInventoryUpload({
+                    fileName: pendingInventoryUpload.fileName || file?.name || 'inventory-upload.csv',
+                    vins: pendingInventoryUpload.vins,
+                });
+
+                const data = result.data || {};
+                const acceptedCount = data.acceptedCount ?? pendingInventoryUpload.vins.length;
+                const messageBits = [`Queued ${acceptedCount} VIN${acceptedCount === 1 ? '' : 's'}.`];
+
+                if ((data.invalidCount ?? 0) > 0) {
+                    messageBits.push(`${data.invalidCount} invalid row${data.invalidCount === 1 ? '' : 's'} skipped.`);
+                }
+
+                if ((data.duplicateCount ?? 0) > 0) {
+                    messageBits.push(`${data.duplicateCount} duplicate row${data.duplicateCount === 1 ? '' : 's'} removed.`);
+                }
+
+                setInventoryStatus(messageBits.join(' '), 'success');
+                // Start (or keep) the live listener so progress updates automatically.
+                startInventoryListener();
+            } catch (error) {
+                setInventoryStatus(error?.message || 'Inventory upload failed.', 'error');
+            }
+        };
+
+        function renderInventoryUploadList(snap) {
+            const listEl = document.getElementById('inventory-uploads-list');
+            const summaryEl = document.getElementById('inventory-summary-copy');
+            if (!listEl || !summaryEl) return;
+
+            if (snap.empty) {
+                summaryEl.textContent = 'No inventory uploads yet. CSV uploads will flow into the shared app pipeline.';
+                listEl.innerHTML = '<p class="dp-loading">No uploads yet.</p>';
+                return;
+            }
+
+            const uploads = snap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
+            const activeCount = uploads.filter((u) => u.status === 'processing' || u.status === 'queued').length;
+            summaryEl.textContent = activeCount > 0
+                ? `${activeCount} upload${activeCount === 1 ? '' : 's'} processing…`
+                : `${uploads.length} recent upload${uploads.length === 1 ? '' : 's'} in the shared pipeline.`;
+
+            listEl.innerHTML = uploads.map((upload) => {
+                const status = formatUploadStatus(upload.status);
+                const processedCount = Number(upload.processedCount ?? 0);
+                const acceptedCount = Number(upload.acceptedCount ?? 0);
+                const failureCount = Number(upload.failureCount ?? 0);
+                const invalidCount = Number(upload.invalidCount ?? 0);
+                const duplicateCount = Number(upload.duplicateCount ?? 0);
+                const meta = [
+                    `${processedCount}/${acceptedCount} processed`,
+                    failureCount > 0 ? `${failureCount} failed` : '0 failed',
+                    invalidCount > 0 ? `${invalidCount} invalid` : '',
+                    duplicateCount > 0 ? `${duplicateCount} duplicate` : '',
+                ].filter(Boolean).join(' · ');
+                const progress = upload.progressMessage ? `<p class="dp-upload-progress">${escapeHtml(upload.progressMessage)}</p>` : '';
+                const emailMeta = upload.createdByEmail ? ` · ${escapeHtml(upload.createdByEmail)}` : '';
+
+                let errorsHtml = '';
+                if (Array.isArray(upload.errors) && upload.errors.length > 0) {
+                    const items = upload.errors.map((e) =>
+                        `<li><span class="dp-upload-error-vin">${escapeHtml(e.vin ?? '—')}</span><span class="dp-upload-error-msg">${escapeHtml(e.error ?? 'Unknown error')}</span></li>`
+                    ).join('');
+                    errorsHtml = `
+                        <details class="dp-upload-errors">
+                            <summary>Show ${upload.errors.length} failed VIN${upload.errors.length === 1 ? '' : 's'}</summary>
+                            <ul>${items}</ul>
+                        </details>`;
+                }
+
+                return `
+                    <div class="dp-upload-row">
+                        <div class="dp-upload-row-head">
+                            <div class="dp-upload-row-title">${escapeHtml(upload.fileName || 'Inventory Upload')}</div>
+                            <span class="dp-upload-status ${status.className}">${status.label}</span>
+                        </div>
+                        <p class="dp-upload-meta">${meta}</p>
+                        ${progress}
+                        ${errorsHtml}
+                        <p class="dp-upload-date">${formatUploadDate(upload.createdAt)}${emailMeta}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function refreshInventoryUploads() {
+            const listEl = document.getElementById('inventory-uploads-list');
+            const summaryEl = document.getElementById('inventory-summary-copy');
+            if (!listEl || !summaryEl) return;
+
+            if (!currentBundle?.dealership?.id) {
+                listEl.innerHTML = '<p class="dp-loading">Sign in to view uploads.</p>';
+                summaryEl.textContent = 'Sign in to manage inventory uploads.';
+                return;
+            }
+
+            // If the live listener is already running, it handles updates automatically.
+            // This manual path is only needed when the panel isn't open (e.g. initial card summary).
+            if (inventoryUnsubscribe) return;
+
+            listEl.innerHTML = '<p class="dp-loading">Loading uploads…</p>';
+            try {
+                const uploadsQuery = query(
+                    collection(db, 'dealerships', currentBundle.dealership.id, 'inventoryUploads'),
+                    orderBy('createdAt', 'desc'),
+                    limit(6),
+                );
+                const snap = await getDocs(uploadsQuery);
+                renderInventoryUploadList(snap);
+            } catch (error) {
+                console.error('Failed to load inventory uploads', error);
+                listEl.innerHTML = '<p class="dp-error">Could not load recent uploads.</p>';
+            }
+        }
+
+        window.refreshInventoryUploads = refreshInventoryUploads;
+
+        // ── Billing ───────────────────────────────────────────────────────────────
+        window.showBilling = function() {
+            document.getElementById('billing-panel').style.display = 'block';
+            document.getElementById('billing-status').style.display = 'none';
+        };
+
+        window.hideBilling = function() {
+            document.getElementById('billing-panel').style.display = 'none';
+        };
+
+        window.subscribeToPlan = async function(plan, cycle) {
+            const statusEl = document.getElementById('billing-status');
+            statusEl.textContent = 'Redirecting to Stripe…';
+            statusEl.className = 'dp-success';
+            statusEl.style.display = 'block';
+            try {
+                const seatLimit = plan === 'performance'
+                    ? PLAN_SEAT_LIMITS.performance
+                    : plan === 'starter'
+                        ? PLAN_SEAT_LIMITS.starter
+                        : PLAN_SEAT_LIMITS.pro;
+                const createCheckout = httpsCallable(functions, 'createCheckoutSession');
+                const result = await createCheckout({
+                    plan,
+                    seatLimit,
+                    billingCycle: cycle,
+                    successUrl: window.location.origin + '/dealer.html?checkout=success',
+                    cancelUrl: window.location.href,
+                });
+                window.location.href = result.data.url;
+            } catch (err) {
+                console.error('Checkout error:', err);
+                statusEl.textContent = 'Could not start checkout: ' + (err.message || 'Please contact support.');
+                statusEl.className = 'dp-error';
+            }
+        };
+
+        // ── Tab toggle ────────────────────────────────────────────────────────────
+        window.showTab = function(tab) {
+            document.getElementById('form-login').style.display = tab === 'login' ? 'flex' : 'none';
+            document.getElementById('form-signup').style.display = tab === 'signup' ? 'flex' : 'none';
+            document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+            document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+        };
+
+        const params = new URLSearchParams(window.location.search);
+        const planParam = params.get('plan');
+        const cycleParam = params.get('cycle');
+        const emailParam = params.get('email');
+        const dealershipParam = params.get('dealership');
+        const signupTab = document.getElementById('tab-signup');
+        const authSub = document.getElementById('auth-sub');
+
+        if (emailParam) {
+            document.getElementById('login-email').value = emailParam;
+            document.getElementById('signup-email').value = emailParam;
+        }
+
+        if (dealershipParam) {
+            document.getElementById('signup-dealership').value = dealershipParam;
+        }
+
+        if (planParam) {
+            signupTab.style.display = 'inline-flex';
+            const planLabel = planParam === 'starter' || planParam === 'base'
+                ? 'Base'
+                : planParam === 'performance' || planParam === 'prime'
+                    ? 'Prime'
+                    : 'Pro';
+            const cycleLabel = cycleParam === 'annual' ? 'annual' : 'monthly';
+            authSub.textContent = `Create your ${planLabel} account and continue to ${cycleLabel} billing.`;
+            showTab('signup');
+        } else {
+            authSub.textContent = 'Sign in to manage your dealership';
+            showTab('login');
+        }
+
+        function splitCsvRow(line) {
+            const cells = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let index = 0; index < line.length; index += 1) {
+                const char = line[index];
+
+                if (char === '"') {
+                    if (inQuotes && line[index + 1] === '"') {
+                        current += '"';
+                        index += 1;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                    continue;
+                }
+
+                if (char === ',' && !inQuotes) {
+                    cells.push(current);
+                    current = '';
+                    continue;
+                }
+
+                current += char;
+            }
+
+            cells.push(current);
+            return cells.map((cell) => cell.trim());
+        }
+
+        function normalizeBrowserVin(value) {
+            return String(value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+        }
+
+        function looksLikeVin(value) {
+            return /^[A-HJ-NPR-Z0-9]{17}$/.test(value);
+        }
+
+        function parseInventoryCsv(text) {
+            const rows = String(text || '')
+                .replace(/\r\n?/g, '\n')
+                .split('\n')
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map(splitCsvRow);
+
+            if (rows.length === 0) {
+                throw new Error('This CSV file is empty.');
+            }
+
+            const headerRow = rows[0].map((cell) => cell.toLowerCase());
+            const vinIndex = headerRow.findIndex((cell) => cell === 'vin' || cell.includes('vin'));
+            const startIndex = vinIndex >= 0 ? 1 : 0;
+            const vins = [];
+            const seen = new Set();
+            let duplicateCount = 0;
+            let invalidCount = 0;
+
+            for (let rowIndex = startIndex; rowIndex < rows.length; rowIndex += 1) {
+                const row = rows[rowIndex];
+                const candidates = vinIndex >= 0 ? [row[vinIndex]] : row;
+                let matchedVin = '';
+
+                for (const cell of candidates) {
+                    const normalized = normalizeBrowserVin(cell);
+                    if (looksLikeVin(normalized)) {
+                        matchedVin = normalized;
+                        break;
+                    }
+                }
+
+                if (!matchedVin) {
+                    invalidCount += 1;
+                    continue;
+                }
+
+                if (seen.has(matchedVin)) {
+                    duplicateCount += 1;
+                    continue;
+                }
+
+                seen.add(matchedVin);
+                vins.push(matchedVin);
+            }
+
+            return {
+                vins,
+                duplicateCount,
+                invalidCount,
+                rowCount: Math.max(rows.length - startIndex, 0),
+            };
+        }
+
+        function renderInventoryPreview(parsed) {
+            const previewEl = document.getElementById('inventory-preview');
+            if (!previewEl) return;
+
+            previewEl.style.display = 'grid';
+            previewEl.innerHTML = `
+                <strong>${parsed.vins.length} unique VIN${parsed.vins.length === 1 ? '' : 's'} ready</strong>
+                <p>${parsed.rowCount} CSV row${parsed.rowCount === 1 ? '' : 's'} scanned.</p>
+                <p>${parsed.duplicateCount} duplicate row${parsed.duplicateCount === 1 ? '' : 's'} removed before upload.</p>
+                <p>${parsed.invalidCount} row${parsed.invalidCount === 1 ? '' : 's'} without a valid VIN will be skipped.</p>
+            `;
+        }
+
+        function setInventoryStatus(message, tone) {
+            const statusEl = document.getElementById('inventory-status');
+            if (!statusEl) return;
+
+            if (!message) {
+                statusEl.style.display = 'none';
+                statusEl.textContent = '';
+                statusEl.className = '';
+                return;
+            }
+
+            statusEl.style.display = 'block';
+            statusEl.textContent = message;
+            statusEl.className = tone === 'error' ? 'dp-error' : 'dp-success';
+        }
+
+        function updateInventoryFileLabel(file) {
+            const label = document.getElementById('inventory-file-copy');
+            if (!label) return;
+            label.textContent = file ? `${file.name} · ${(file.size / 1024).toFixed(1)} KB` : 'No file selected';
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function toDate(value) {
+            if (!value) return null;
+            if (typeof value?.toDate === 'function') return value.toDate();
+            if (typeof value === 'number') return new Date(value);
+            if (typeof value === 'string') return new Date(value);
+            if (typeof value?.seconds === 'number') return new Date(value.seconds * 1000);
+            return null;
+        }
+
+        function formatUploadDate(value) {
+            const date = toDate(value);
+            if (!date || Number.isNaN(date.getTime())) {
+                return 'Waiting for timestamp';
+            }
+
+            return date.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+        }
+
+        function formatUploadStatus(status) {
+            switch (status) {
+                case 'completed':
+                    return { label: 'Completed', className: 'is-success' };
+                case 'completed_with_errors':
+                    return { label: 'Completed With Errors', className: 'is-warning' };
+                case 'failed':
+                    return { label: 'Failed', className: 'is-error' };
+                case 'processing':
+                    return { label: 'Processing', className: 'is-processing' };
+                default:
+                    return { label: 'Queued', className: 'is-queued' };
+            }
+        }
+
+        function getSeatLimit(dealership) {
+            if (typeof dealership?.seatLimit === 'number') return dealership.seatLimit;
+            return PLAN_SEAT_LIMITS[dealership?.subscriptionPlan] ?? null;
+        }
+
+        function buildSeatSummary(dealership, activeMembers, pendingInvites) {
+            const seatLimit = getSeatLimit(dealership);
+            const allocated = activeMembers + pendingInvites;
+            return {
+                seatLimit,
+                activeMembers,
+                pendingInvites,
+                allocated,
+                remaining: seatLimit == null ? null : Math.max(seatLimit - allocated, 0),
+            };
+        }
+
+        function formatSeatValue(value) {
+            return value == null ? 'Unlimited' : String(value);
+        }
+
+        function formatPlanLabel(dealership) {
+            const seatLimit = getSeatLimit(dealership);
+            if (seatLimit === PLAN_SEAT_LIMITS.performance) return 'Prime';
+            if (seatLimit === PLAN_SEAT_LIMITS.pro) return 'Pro';
+            if (seatLimit === PLAN_SEAT_LIMITS.starter) return 'Base';
+            const fallback = dealership?.subscriptionPlan ?? 'starter';
+            return fallback.charAt(0).toUpperCase() + fallback.slice(1);
+        }
+
+        function updateSeatSummaryUI() {
+            if (!currentSeatSummary) return;
+
+            document.getElementById('seat-limit-value').textContent = formatSeatValue(currentSeatSummary.seatLimit);
+            document.getElementById('seat-allocated-value').textContent = String(currentSeatSummary.allocated);
+            document.getElementById('seat-remaining-value').textContent = formatSeatValue(currentSeatSummary.remaining);
+            document.getElementById('team-seat-copy').textContent = `Invite salespeople, assign roles, and manage team access. ${currentSeatSummary.allocated} allocated, ${formatSeatValue(currentSeatSummary.remaining)} left.`;
+        }
+
+        function updateSetupChecklist(dealership, allMembers) {
+            const checks = {
+                'check-subscription': (dealership.subscriptionStatus === 'active'),
+                'check-members': (allMembers.length >= 3),
+                'check-manager': (allMembers.some(m => m.role === 'manager' || m.role === 'admin')),
+                'check-scan': ((dealership.totalScans ?? 0) > 0),
+            };
+            let doneCount = 0;
+            for (const [id, done] of Object.entries(checks)) {
+                const el = document.getElementById(id);
+                if (!el) continue;
+                const icon = el.querySelector('.dp-check-icon');
+                if (done) {
+                    el.classList.add('dp-check-done');
+                    if (icon) icon.textContent = '✓';
+                    doneCount++;
+                } else {
+                    el.classList.remove('dp-check-done');
+                    if (icon) icon.textContent = '○';
+                }
+            }
+            const card = document.getElementById('card-checklist');
+            if (card && doneCount === 4) {
+                const desc = card.querySelector('.dp-card-body p');
+                if (desc) desc.textContent = 'All set! Your team is fully onboarded.';
+            }
+        }
+
+        function friendlyError(code) {
+            const map = {
+                'auth/invalid-email': 'Invalid email address.',
+                'auth/user-not-found': 'No account found with this email.',
+                'auth/wrong-password': 'Incorrect password.',
+                'auth/email-already-in-use': 'An account with this email already exists.',
+                'auth/weak-password': 'Password must be at least 6 characters.',
+                'auth/invalid-credential': 'Invalid email or password.',
+            };
+            return map[code] || 'Something went wrong. Please try again.';
+        }
+    </script>
+</body>
+</html>

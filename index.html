@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VINIE &mdash; Close More Deals</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <header class="main-header">
+        <nav class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">V</span>
+                <span class="logo-text">VINIE</span>
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="#problem" class="nav-link">About</a>
+                <a href="#how-it-works" class="nav-link">How it Works</a>
+                <a href="#testimonials" class="nav-link">Testimonials</a>
+                <a href="#pricing" class="nav-link">Pricing</a>
+                <button id="nav-auth-button" class="nav-auth-button" type="button" onclick="handleAuthAction()">
+                    <span class="nav-auth-label" id="nav-auth-action">Login</span>
+                    <span class="nav-auth-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                    </span>
+                </button>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-inner">
+            <div class="hero-copy">
+                <h1 class="anim-fade" style="--delay:0.1s">Sell more cars<br><span class="gradient-text">with instant intelligence.</span></h1>
+                <p class="hero-sub anim-fade" style="--delay:0.2s">
+                    On demand expert product knowledge to empower your team to build value and close more deals.
+                </p>
+                <div class="hero-actions anim-fade" style="--delay:0.3s">
+                    <a href="#" class="btn btn-primary btn-lg" onclick="openHomeSignup(); return false;">Get Started</a>
+                    <p class="hero-microcopy">Set up in minutes • No training required</p>
+                </div>
+            </div>
+            <div class="hero-visual anim-fade" style="--delay:0.35s">
+                <img class="hero-phone-image" src="images/phone-image.png" alt="VINIE app preview">
+            </div>
+        </div>
+        <div class="hero-logos anim-fade" style="--delay:0.5s">
+            <span class="hero-logos-label">Used by top-performing sales teams</span>
+        </div>
+    </section>
+
+    <!-- PROBLEM + SOLUTION TWO COLUMN -->
+    <section id="problem" class="ps-section reveal">
+        <div class="ps-inner">
+            <div class="ps-col ps-problem">
+                <div class="eyebrow-pill eyebrow-red">The Problem</div>
+                <h2>When product knowledge is weak, deals slip.</h2>
+                <p>Salespeople hesitate. Customers lose confidence. Buyers leave to “think about it” and don’t come back.</p>
+                <ul class="ps-list">
+                    <li>“Let me check” kills momentum and confidence</li>
+                    <li>Generic pitches fail to connect or persuade</li>
+                    <li>Weak product knowledge makes price hard to justify</li>
+                    <li>Poor comparisons and missed features lose the edge</li>
+                    <li>Customers leave to “think” instead of moving forward</li>
+                </ul>
+            </div>
+            <div class="ps-divider"></div>
+            <div id="solution" class="ps-col ps-solution">
+                <div class="eyebrow-pill eyebrow-blue">The Solution</div>
+                <h2>Confident answers, right when it matters.</h2>
+                <p>Vinie gives your team clear, relevant product knowledge in seconds so every conversation moves forward.</p>
+                <ul class="ps-list">
+                    <li>Clear reasons this car fits this buyer</li>
+                    <li>Sharp comparisons that show why this car wins</li>
+                    <li>Pricing explained so it feels justified</li>
+                    <li>Objections handled in the moment with confidence</li>
+                    <li>Focused talking points that move the deal forward</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="how-section reveal">
+        <div class="how-inner">
+            <div class="eyebrow-pill">How it Works</div>
+            <h2>Three steps to a closed deal.</h2>
+            <div class="how-steps">
+                <div class="how-step">
+                    <div class="how-step-num">1</div>
+                    <div class="how-step-body">
+                        <h3>Scan the VIN</h3>
+                        <p>Open VINIE and point your camera at the VIN barcode, or type it in manually.</p>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <div class="how-step-num">2</div>
+                    <div class="how-step-body">
+                        <h3>Instant Intelligence</h3>
+                        <p>VINIE generates a complete sales brief — market data, objections, competitors, talking points.</p>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <div class="how-step-num">3</div>
+                    <div class="how-step-body">
+                        <h3>Sell with Confidence</h3>
+                        <p>Your salesperson walks to the customer already knowing everything they need to close the deal.</p>
+                    </div>
+                </div>
+            </div>
+            <p class="how-footnote">One more deal closed a month because of Vinie, pays for the service.</p>
+        </div>
+    </section>
+
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="testimonials-section reveal">
+        <div class="testimonials-inner">
+            <div class="eyebrow-pill">What Dealers Say</div>
+            <h2>Real results from real dealerships.</h2>
+            <div class="testimonials-grid">
+
+                <div class="tcard">
+                    <div class="tcard-stars">★★★★★</div>
+                    <p class="tcard-quote">"Before VINIE, my team would fumble when customers asked about a used car they weren't familiar with. Now they walk up confident. We closed 4 extra deals last month we would have lost."</p>
+                    <div class="tcard-author">
+                        <div class="tcard-avatar">MR</div>
+                        <div>
+                            <div class="tcard-name">Marcus Reynolds</div>
+                            <div class="tcard-role">General Manager · Reynolds Auto Group</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tcard">
+                    <div class="tcard-stars">★★★★★</div>
+                    <p class="tcard-quote">"I've been selling cars for 6 years and I still learn something new every time I scan a VIN. The competitor breakdowns and objection scripts are exactly what I needed in the moment with a customer."</p>
+                    <div class="tcard-author">
+                        <div class="tcard-avatar">JT</div>
+                        <div>
+                            <div class="tcard-name">Jamie Torres</div>
+                            <div class="tcard-role">Sales Consultant · Lakeside Pre-Owned</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tcard">
+                    <div class="tcard-stars">★★★★★</div>
+                    <p class="tcard-quote">"We have a high turnover on the sales floor. New reps used to take months to get comfortable. With VINIE they're pitching used cars with confidence in their first week. It's a game changer for onboarding."</p>
+                    <div class="tcard-author">
+                        <div class="tcard-avatar">DK</div>
+                        <div>
+                            <div class="tcard-name">Diane Kim</div>
+                            <div class="tcard-role">Sales Director · Pacific Motors</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="pricing-section reveal">
+        <div class="pricing-inner">
+            <div class="eyebrow-pill">Pricing</div>
+            <h2>Simple pricing.</h2>
+            <p class="pricing-sub">One plan for your whole team. No per-seat fees.</p>
+
+            <div class="billing-toggle">
+                <label class="toggle-label active" id="lbl-monthly">Monthly</label>
+                <div class="toggle-switch" id="billing-toggle">
+                    <div class="toggle-knob"></div>
+                </div>
+                <label class="toggle-label" id="lbl-annually">Annually <span class="save-badge">SAVE 17%</span></label>
+            </div>
+
+            <div class="pricing-cards">
+                <div class="pricing-card pricing-card-offset">
+                    <div class="plan-name">Base</div>
+                    <p class="plan-desc">For smaller dealerships getting started with sales intelligence.</p>
+                    <div class="plan-price">
+                        <span class="price-amount" data-monthly="299" data-annual="248">$299</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <p class="alt-price" id="alt-starter">or $2,976/year</p>
+                    <button class="btn btn-plan" onclick="handleGetStarted('starter','299','248', this)">Get Started</button>
+                    <ul class="plan-features">
+                        <li>Up to 15 users</li>
+                        <li>Unlimited VIN scans</li>
+                        <li>Instant vehicle sales intelligence</li>
+                        <li>iOS &amp; Android app</li>
+                    </ul>
+                </div>
+
+                <div class="pricing-card card-popular">
+                    <div class="popular-badge">MOST POPULAR</div>
+                    <div class="plan-name">Pro</div>
+                    <p class="plan-desc">For active dealerships with large used car inventory.</p>
+                    <div class="plan-price">
+                        <span class="price-amount" data-monthly="499" data-annual="414">$499</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <p class="alt-price" id="alt-pro">or $4,968/year</p>
+                    <button class="btn btn-primary btn-plan-primary" onclick="handleGetStarted('pro','499','414', this)">Get Started</button>
+                    <ul class="plan-features">
+                        <li>Up to 40 users</li>
+                        <li>Unlimited VIN scans</li>
+                        <li>Advanced sales insights</li>
+                        <li>Market comparison data</li>
+                        <li>Objection handling guidance</li>
+                    </ul>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="plan-name">Prime</div>
+                    <p class="plan-desc">For high-volume dealerships and dealer groups.</p>
+                    <div class="plan-price">
+                        <span class="price-amount" data-monthly="899" data-annual="746">$899</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <p class="alt-price" id="alt-perf">or $8,952/year</p>
+                    <button class="btn btn-plan" onclick="handleGetStarted('performance','899','746', this)">Get Started</button>
+                    <ul class="plan-features">
+                        <li>Up to 100 users</li>
+                        <li>Priority AI processing</li>
+                        <li>Advanced market intelligence</li>
+                        <li>Sales performance analytics</li>
+                        <li>Priority support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- FINAL CTA -->
+    <section class="cta-section reveal">
+        <div class="cta-inner">
+            <h2>Give your team the knowledge<br>to sell any car.</h2>
+            <p>Scan the VIN. Know how to sell the car.</p>
+            <div class="cta-actions">
+                <a href="#pricing" class="btn btn-white btn-lg">Get VINIE for Your Dealership</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOGIN MODAL -->
+    <div id="login-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:520;align-items:center;justify-content:center;overflow-y:auto;padding:16px;">
+        <div class="checkout-modal login-modal">
+            <button class="checkout-close" type="button" onclick="closeLoginModal()">✕</button>
+            <div class="checkout-header">
+                <div class="eyebrow-pill" id="login-modal-badge">Dealer Login</div>
+                <h3 id="login-modal-title">Sign in to VINIE</h3>
+                <p class="checkout-price-line login-subline" id="login-modal-subline">Access your dealership portal without leaving the home page.</p>
+            </div>
+            <div class="login-tabs">
+                <button type="button" class="login-tab active" id="home-tab-login" onclick="setHomeAuthMode('login')">Sign In</button>
+                <button type="button" class="login-tab" id="home-tab-signup" onclick="setHomeAuthMode('signup')">Get Account</button>
+            </div>
+            <form id="login-form-home" onsubmit="handleHomeLogin(event)">
+                <div class="checkout-field">
+                    <label>Email</label>
+                    <input type="email" id="home-login-email" placeholder="dealer@example.com" required autocomplete="email">
+                </div>
+                <div class="checkout-field">
+                    <label>Password</label>
+                    <input type="password" id="home-login-password" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+                <div id="home-login-error" class="checkout-error" style="display:none;"></div>
+                <button type="submit" class="btn btn-primary checkout-submit" id="home-login-btn">Sign In</button>
+                <p class="checkout-secure">Need an account? <button type="button" class="login-inline-link" onclick="setHomeAuthMode('signup')">Get account</button></p>
+            </form>
+            <form id="signup-form-home" style="display:none;" onsubmit="handleHomeSignup(event)">
+                <div class="checkout-field">
+                    <label>Full Name</label>
+                    <input type="text" id="home-signup-name" placeholder="Jane Smith" required autocomplete="name">
+                </div>
+                <div class="checkout-field">
+                    <label>Email</label>
+                    <input type="email" id="home-signup-email" placeholder="dealer@example.com" required autocomplete="email">
+                </div>
+                <div class="checkout-field">
+                    <label>Password</label>
+                    <input type="password" id="home-signup-password" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password">
+                </div>
+                <div class="checkout-field">
+                    <label>Dealership Name</label>
+                    <input type="text" id="home-signup-dealership" placeholder="Your Dealership Name" required>
+                </div>
+                <div class="checkout-field">
+                    <label>Choose Plan</label>
+                    <div class="login-plan-options">
+                        <button type="button" class="login-plan-option active" id="signup-plan-starter" onclick="setHomeSignupPlan('starter')">
+                            <span class="login-plan-name">Base</span>
+                            <span class="login-plan-price">$299/mo</span>
+                        </button>
+                        <button type="button" class="login-plan-option" id="signup-plan-pro" onclick="setHomeSignupPlan('pro')">
+                            <span class="login-plan-name">Pro</span>
+                            <span class="login-plan-price">$499/mo</span>
+                        </button>
+                        <button type="button" class="login-plan-option" id="signup-plan-performance" onclick="setHomeSignupPlan('performance')">
+                            <span class="login-plan-name">Prime</span>
+                            <span class="login-plan-price">$899/mo</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="checkout-billing">
+                    <span class="checkout-billing-label">Billing cycle:</span>
+                    <label class="checkout-radio">
+                        <input type="radio" name="home-signup-billing" value="monthly" checked onchange="updateHomeSignupSummary()">
+                        Monthly
+                    </label>
+                    <label class="checkout-radio">
+                        <input type="radio" name="home-signup-billing" value="annual" onchange="updateHomeSignupSummary()">
+                        Annual
+                    </label>
+                </div>
+                <p class="login-plan-summary" id="home-signup-summary">$299/month for Base</p>
+                <div id="home-signup-error" class="checkout-error" style="display:none;"></div>
+                <button type="submit" class="btn btn-primary checkout-submit" id="home-signup-btn">Create Account &amp; Continue to Payment</button>
+                <p class="checkout-secure">Already have an account? <button type="button" class="login-inline-link" onclick="setHomeAuthMode('login')">Sign in here</button></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <span class="logo-icon small">V</span>
+                    <span class="logo-text">VINIE</span>
+                </div>
+                <p class="footer-tagline">On demand sales intelligence<br>for car salespeople.</p>
+            </div>
+            <div class="footer-col">
+                <div class="footer-col-title">Product</div>
+                <a href="#problem" class="footer-link">The Problem</a>
+                <a href="#solution" class="footer-link">The Solution</a>
+                <a href="#how-it-works" class="footer-link">How it Works</a>
+                <a href="#pricing" class="footer-link">Pricing</a>
+            </div>
+            <div class="footer-col">
+                <div class="footer-col-title">Dealer</div>
+                <a href="dealer.html" class="footer-link">Dealer Portal</a>
+                <a href="#pricing" class="footer-link">Sign Up</a>
+                <a href="privacy.html" class="footer-link">Privacy Policy</a>
+                <a href="terms.html" class="footer-link">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 VINIE. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase auth + smart checkout -->
+    <script type="module">
+        import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut as fbSignOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+        import { getFirestore, doc, getDoc, getDocs, collection, query, where, writeBatch, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+        import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkKXLY31JEdJw70h0mFJfNRcF6cK_rr6o",
+            authDomain: "vinie-7c225.firebaseapp.com",
+            projectId: "vinie-7c225",
+            storageBucket: "vinie-7c225.firebasestorage.app",
+            messagingSenderId: "874805271326",
+            appId: "1:874805271326:ios:899c7a9f2543981375c70f"
+        };
+
+        const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const functions = getFunctions(app, 'us-central1');
+        const HOME_SIGNUP_SEAT_LIMITS = {
+            starter: 15,
+            pro: 40,
+            performance: 100,
+        };
+        const HOME_PLAN_LABELS = {
+            starter: 'Base',
+            pro: 'Pro',
+            performance: 'Prime',
+        };
+
+        let _currentUser = null;
+        let _currentDealershipId = null;
+        let _homeAuthMode = 'login';
+        let _homeSignupPlan = 'starter';
+        let _homeSignupInProgress = false;
+        let _homeSignupBilling = 'monthly';
+
+        onAuthStateChanged(auth, async (user) => {
+            _currentUser = user;
+            const authAction = document.getElementById('nav-auth-action');
+
+            if (user) {
+                authAction.textContent = 'Logout';
+                if (!_homeSignupInProgress) {
+                    window.closeLoginModal();
+                }
+                try {
+                    const snap = await getDoc(doc(db, 'users', user.uid));
+                    if (snap.exists()) {
+                        _currentDealershipId = snap.data().currentDealershipId || null;
+                    }
+                } catch {}
+            } else {
+                _currentDealershipId = null;
+                authAction.textContent = 'Login';
+            }
+        });
+
+        window.handleAuthAction = async function() {
+            if (_currentUser) {
+                await dealerSignOut();
+                return;
+            }
+            window.openLoginModal();
+        };
+
+        window.dealerSignOut = async function() {
+            await fbSignOut(auth);
+        };
+
+        window.openLoginModal = function() {
+            document.getElementById('home-login-error').style.display = 'none';
+            document.getElementById('home-signup-error').style.display = 'none';
+            window.setHomeAuthMode('login');
+            document.getElementById('login-overlay').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeLoginModal = function() {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('home-login-error').style.display = 'none';
+            document.getElementById('home-signup-error').style.display = 'none';
+            document.getElementById('login-form-home').reset();
+            document.getElementById('signup-form-home').reset();
+            _homeSignupPlan = 'starter';
+            _homeSignupBilling = 'monthly';
+            window.setHomeAuthMode('login');
+            window.setHomeSignupPlan('starter');
+            window.setHomeSignupBilling('monthly');
+            _homeSignupInProgress = false;
+            document.body.style.overflow = '';
+        };
+
+        window.setHomeAuthMode = function(mode) {
+            _homeAuthMode = mode;
+            const isSignup = mode === 'signup';
+            document.getElementById('login-form-home').style.display = isSignup ? 'none' : 'block';
+            document.getElementById('signup-form-home').style.display = isSignup ? 'block' : 'none';
+            document.getElementById('home-tab-login').classList.toggle('active', !isSignup);
+            document.getElementById('home-tab-signup').classList.toggle('active', isSignup);
+            document.getElementById('login-modal-badge').textContent = isSignup ? 'Get Account' : 'Dealer Login';
+            document.getElementById('login-modal-title').textContent = isSignup ? 'Create your VINIE account' : 'Sign in to VINIE';
+            document.getElementById('login-modal-subline').textContent = isSignup
+                ? 'Choose your plan, create your account, and continue straight to payment.'
+                : 'Access your dealership portal without leaving the home page.';
+            document.getElementById('home-login-error').style.display = 'none';
+            document.getElementById('home-signup-error').style.display = 'none';
+        };
+
+        window.setHomeSignupPlan = function(plan) {
+            _homeSignupPlan = plan;
+            document.getElementById('signup-plan-starter').classList.toggle('active', plan === 'starter');
+            document.getElementById('signup-plan-pro').classList.toggle('active', plan === 'pro');
+            document.getElementById('signup-plan-performance').classList.toggle('active', plan === 'performance');
+            window.updateHomeSignupSummary();
+        };
+
+        window.setHomeSignupBilling = function(cycle) {
+            _homeSignupBilling = cycle === 'annual' ? 'annual' : 'monthly';
+            document.querySelectorAll('input[name="home-signup-billing"]').forEach((input) => {
+                input.checked = input.value === _homeSignupBilling;
+            });
+            window.updateHomeSignupSummary();
+        };
+
+        window.updateHomeSignupSummary = function() {
+            const prices = {
+                starter: { monthly: '$299/month', annual: '$2,976/year' , label: 'Base' },
+                pro: { monthly: '$499/month', annual: '$4,968/year', label: 'Pro' },
+                performance: { monthly: '$899/month', annual: '$8,952/year', label: 'Prime' },
+            };
+            const cycle = document.querySelector('input[name="home-signup-billing"]:checked')?.value === 'annual' ? 'annual' : 'monthly';
+            _homeSignupBilling = cycle;
+            const selection = prices[_homeSignupPlan];
+            document.getElementById('home-signup-summary').textContent = `${selection[cycle]} for ${selection.label}`;
+        };
+
+        window.openHomeSignup = function(plan = 'starter', cycle = 'monthly') {
+            document.getElementById('home-login-error').style.display = 'none';
+            document.getElementById('home-signup-error').style.display = 'none';
+            window.setHomeSignupPlan(plan);
+            window.setHomeSignupBilling(cycle);
+            window.setHomeAuthMode('signup');
+            document.getElementById('login-overlay').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.handleHomeLogin = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('home-login-btn');
+            const errEl = document.getElementById('home-login-error');
+            const email = document.getElementById('home-login-email').value.trim();
+            const password = document.getElementById('home-login-password').value;
+
+            btn.textContent = 'Signing in…';
+            btn.disabled = true;
+            errEl.style.display = 'none';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (err) {
+                errEl.textContent = err?.message || 'Could not sign in. Please try again.';
+                errEl.style.display = 'block';
+            } finally {
+                btn.textContent = 'Sign In';
+                btn.disabled = false;
+            }
+        };
+
+        window.handleHomeSignup = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('home-signup-btn');
+            const errEl = document.getElementById('home-signup-error');
+            const name = document.getElementById('home-signup-name').value.trim();
+            const email = document.getElementById('home-signup-email').value.trim();
+            const password = document.getElementById('home-signup-password').value;
+            const dealershipName = document.getElementById('home-signup-dealership').value.trim();
+            const billingCycle = document.querySelector('input[name="home-signup-billing"]:checked')?.value === 'annual' ? 'yearly' : 'monthly';
+            const seatLimit = HOME_SIGNUP_SEAT_LIMITS[_homeSignupPlan] ?? HOME_SIGNUP_SEAT_LIMITS.starter;
+
+            btn.textContent = 'Creating account…';
+            btn.disabled = true;
+            errEl.style.display = 'none';
+            _homeSignupInProgress = true;
+
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, email, password);
+                const uid = cred.user.uid;
+                const batch = writeBatch(db);
+                const dealerRef = doc(collection(db, 'dealerships'));
+
+                batch.set(dealerRef, {
+                    name: dealershipName,
+                    status: 'active',
+                    subscriptionPlan: _homeSignupPlan,
+                    seatLimit,
+                    subscriptionStatus: 'pending_checkout',
+                    billingCycle,
+                    subscriptionGraceUntil: null,
+                    createdAt: serverTimestamp(),
+                });
+
+                batch.set(doc(db, 'users', uid), {
+                    email,
+                    name,
+                    status: 'active',
+                    currentDealershipId: dealerRef.id,
+                    createdAt: serverTimestamp(),
+                });
+
+                batch.set(doc(collection(db, 'memberships')), {
+                    userId: uid,
+                    dealershipId: dealerRef.id,
+                    role: 'admin',
+                    isActive: true,
+                    createdAt: serverTimestamp(),
+                });
+
+                await batch.commit();
+                const createCheckout = httpsCallable(functions, 'createCheckoutSession');
+                const result = await createCheckout({
+                    plan: _homeSignupPlan,
+                    seatLimit,
+                    billingCycle,
+                    successUrl: window.location.origin + '/dealer.html?checkout=success',
+                    cancelUrl: window.location.href,
+                });
+                window.location.href = result.data.url;
+            } catch (err) {
+                errEl.textContent = err?.code ? friendlyError(err.code) : (err?.message || 'Something went wrong. Please try again.');
+                errEl.style.display = 'block';
+                btn.textContent = 'Create Account & Continue to Payment';
+                btn.disabled = false;
+                _homeSignupInProgress = false;
+            }
+        };
+
+        function friendlyError(code) {
+            const map = {
+                'auth/invalid-email': 'Invalid email address.',
+                'auth/user-not-found': 'No account found with this email.',
+                'auth/wrong-password': 'Incorrect password.',
+                'auth/email-already-in-use': 'An account with this email already exists.',
+                'auth/weak-password': 'Password must be at least 6 characters.',
+                'auth/invalid-credential': 'Invalid email or password.',
+            };
+            return map[code] || 'Something went wrong. Please try again.';
+        }
+
+        // Called by pricing "Get Started" buttons
+        window.handleGetStarted = async function(plan, monthly, annual, trigger = null) {
+            if (_currentUser) {
+                // Logged in — go straight to Stripe
+                const btn = trigger || window.event?.currentTarget || null;
+                const origText = btn ? btn.textContent : '';
+                if (btn) {
+                    btn.textContent = 'Loading…';
+                    btn.disabled = true;
+                }
+                try {
+                    const billingCycle = window._checkoutIsAnnual ? 'yearly' : 'monthly';
+                    const seatLimit = HOME_SIGNUP_SEAT_LIMITS[plan] ?? HOME_SIGNUP_SEAT_LIMITS.starter;
+                    const createCheckout = httpsCallable(functions, 'createCheckoutSession');
+                    const result = await createCheckout({
+                        plan,
+                        seatLimit,
+                        billingCycle,
+                        successUrl: window.location.origin + '/dealer.html?checkout=success',
+                        cancelUrl: window.location.href,
+                    });
+                    window.location.href = result.data.url;
+                } catch (err) {
+                    console.error('Checkout error:', err);
+                    if (btn) {
+                        btn.textContent = origText;
+                        btn.disabled = false;
+                    }
+                    alert('Could not start checkout: ' + (err.message || 'Please try again.'));
+                }
+            } else {
+                // Not logged in — open the same signup card used by "Get Account"
+                const selectedCycle = window._checkoutIsAnnual ? 'annual' : 'monthly';
+                window.openHomeSignup(plan, selectedCycle);
+            }
+        };
+    </script>
+
+    <script>
+        // ── Mobile nav ──────────────────────────────────────────────────────────
+        const navToggle = document.getElementById('nav-toggle');
+        const navLinks = document.getElementById('nav-links');
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            navToggle.classList.toggle('open');
+        });
+        navLinks.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+                navToggle.classList.remove('open');
+            });
+        });
+        navLinks.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+                navToggle.classList.remove('open');
+            });
+        });
+
+        // ── Scroll reveal ───────────────────────────────────────────────────────
+        const revealObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.06 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // ── Hero canvas dot pattern ─────────────────────────────────────────────
+        (function () {
+            const canvas = document.getElementById('hero-canvas');
+            const ctx = canvas.getContext('2d');
+            let W, H, dots = [];
+
+            function resize() {
+                W = canvas.width  = canvas.offsetWidth;
+                H = canvas.height = canvas.offsetHeight;
+                buildDots();
+            }
+
+            function buildDots() {
+                dots = [];
+                const spacing = 36;
+                for (let x = 0; x < W; x += spacing) {
+                    for (let y = 0; y < H; y += spacing) {
+                        dots.push({ x, y, alpha: Math.random() * 0.25 + 0.05, sparkle: 0 });
+                    }
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                dots.forEach(d => {
+                    if (Math.random() < 0.0008) d.sparkle = 40;
+                    if (d.sparkle > 0) {
+                        d.sparkle--;
+                        d.alpha = Math.min(0.6, d.alpha + 0.04);
+                    } else {
+                        d.alpha = Math.max(0.04, d.alpha - 0.005);
+                    }
+                    ctx.beginPath();
+                    ctx.arc(d.x, d.y, 1.5, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(97,97,255,${d.alpha})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(draw);
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+            draw();
+        })();
+
+        // ── Billing toggle ──────────────────────────────────────────────────────
+        const billingToggle = document.getElementById('billing-toggle');
+        const lblMonthly  = document.getElementById('lbl-monthly');
+        const lblAnnually = document.getElementById('lbl-annually');
+        let isAnnual = false;
+        window._checkoutIsAnnual = false;
+
+        billingToggle.addEventListener('click', () => {
+            isAnnual = !isAnnual;
+            window._checkoutIsAnnual = isAnnual;
+            billingToggle.classList.toggle('active', isAnnual);
+            lblMonthly.classList.toggle('active', !isAnnual);
+            lblAnnually.classList.toggle('active', isAnnual);
+            document.querySelectorAll('.price-amount').forEach(el => {
+                el.textContent = '$' + (isAnnual ? el.dataset.annual : el.dataset.monthly);
+            });
+        });
+
+        document.getElementById('login-overlay').addEventListener('click', function(e) {
+            if (e.target === this) window.closeLoginModal();
+        });
+    </script>
+</body>
+
+</html>
