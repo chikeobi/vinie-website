@@ -86,7 +86,18 @@ function deriveHighlights(vehicle: Vehicle): string[] {
   if (isMeaningful(vehicle.drivetrain) && /awd|4wd|4x4/i.test(vehicle.drivetrain!)) {
     add(`${vehicle.drivetrain} — all-weather capable`)
   }
-  if (isMeaningful(vehicle.warranty)) add(`Warranty: ${vehicle.warranty}`)
+  // Prefer a computed "warranty left" summary rather than the raw warranty string
+  try {
+    const warrantyItems = deriveWarrantyItems(vehicle)
+    const warrantySummary = warrantyItems.find((i) => /warrant/i.test(i.label) || /powertrain|basic|battery/i.test(i.label))
+    if (warrantySummary && isMeaningful(warrantySummary.value)) {
+      add(`Warranty: ${warrantySummary.value}`)
+    } else if (isMeaningful(vehicle.warranty)) {
+      add(`Warranty: ${vehicle.warranty}`)
+    }
+  } catch {
+    if (isMeaningful(vehicle.warranty)) add(`Warranty: ${vehicle.warranty}`)
+  }
   if (vehicle.daysOnLot > 0) {
     add(vehicle.daysOnLot <= 14 ? `${vehicle.daysOnLot} days on lot — fresh inventory` : `${vehicle.daysOnLot} days on lot`)
   }
@@ -94,6 +105,14 @@ function deriveHighlights(vehicle: Vehicle): string[] {
   for (const feature of getCompellingFeatures(vehicle)) {
     if (items.length >= 6) break
     add(feature)
+  }
+
+  // Fold deal angle into highlights where helpful (but avoid overfilling)
+  try {
+    const deal = deriveDealAngle(vehicle)
+    if (deal && items.length < 6) add(deal)
+  } catch {
+    // ignore
   }
 
   return items
@@ -442,9 +461,7 @@ export default function VinDetailPage() {
           </div>
         </AccordionSection>
 
-        <AccordionSection title="🎯 Deal Angle">
-          <p className="text-[15px] leading-relaxed text-(--text-primary)">{deriveDealAngle(vehicle)}</p>
-        </AccordionSection>
+        {/* Deal angle folded into highlights to reduce card count */}
 
         <AccordionSection title="⚠️ Likely Objections">
           <div className="space-y-3">
