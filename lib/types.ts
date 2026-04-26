@@ -34,6 +34,13 @@ export interface Vehicle {
     location: string
     price: string
   }>
+  historyReport?: {
+    provider: string
+    url?: string
+    summary?: string
+    fetchedAt?: number
+    attachedBy?: string
+  }
   isPinned?: boolean
   isSpecial?: boolean
   hasPriceDrop?: boolean

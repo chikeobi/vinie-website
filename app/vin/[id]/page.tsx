@@ -267,6 +267,7 @@ export default function VinDetailPage() {
     items: Array<{ component: string; summary: string; remedy?: string }>
     summaryText?: string
   }>(null)
+  const { user } = useAuth()
   const [stateReport, setStateReport] = useState<null | { available: boolean; message?: string; result?: any }>(null)
 
   useEffect(() => {
@@ -588,7 +589,38 @@ export default function VinDetailPage() {
                 ))}
               </>
             ) : (
-              <InfoRow label="Vehicle history" value="No full history report available" />
+              <>
+                <InfoRow label="Vehicle history" value="No full history report available" />
+                {user && (
+                  <div className="mt-2">
+                    <button
+                      onClick={async () => {
+                        const provider = prompt('Report provider name (e.g. Carfax)')
+                        const url = prompt('Report URL (link to the report on dealer site)')
+                        const summary = prompt('Short summary (optional)')
+                        if (!provider || !url) return alert('Provider and URL required')
+                        try {
+                          const resp = await fetch('/api/attach-history', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ vin: vehicle.vin, historyReport: { provider, url, summary, attachedBy: user.uid } }),
+                          })
+                          if (!resp.ok) throw new Error('attach failed')
+                          const j = await resp.json()
+                          // reflect immediately
+                          setHistoryReport({ provider: j.historyReport.provider, fetchedAt: j.historyReport.fetchedAt, count: 0, items: [], summaryText: j.historyReport.summary })
+                          alert('Report attached')
+                        } catch (e) {
+                          alert('Failed to attach report')
+                        }
+                      }}
+                      className="text-[13px] text-(--purple) font-semibold"
+                    >
+                      Attach report URL
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </AccordionSection>
