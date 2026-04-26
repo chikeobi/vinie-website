@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #F6F4FB;
+  --card: #FCFCFE;
+  --purple: #6752E8;
+  --text-primary: #2B2733;
+  --text-secondary: #8A8495;
+  --amber: #B47C12;
+  --border: #E7E2EF;
+  --chip-active-bg: #2B2733;
+  --chip-active-text: #FFFFFF;
+  --card-shadow: 0 8px 24px rgba(41, 33, 68, 0.06);
+  --radius-card: 14px;
+  --radius-panel: 16px;
+  --header-height: 60px;
+  --dock-height: 74px;
+  --dock-shadow: 0 14px 32px rgba(41, 33, 68, 0.10);
+  --page-gutter: 16px;
+}
+
+html.dark {
+  --bg: #1C1C1E;
+  --card: #2C2C2E;
+  --text-primary: #F2F2F7;
+  --text-secondary: #8E8E93;
+  --border: #3A3A3C;
+  --chip-active-bg: #F2F2F7;
+  --chip-active-text: #1C1C1E;
+}
+
+html,
+body {
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  padding-inline: var(--page-gutter);
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide scrollbar but allow scrolling */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
