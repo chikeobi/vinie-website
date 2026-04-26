@@ -125,16 +125,57 @@ function deriveLikelyObjections(vehicle: Vehicle): string[] {
   return objections
 }
 
-function deriveWarrantyItems(vehicle: Vehicle): string[] {
-  const items: string[] = []
-  if (isMeaningful(vehicle.warranty)) items.push(String(vehicle.warranty))
+function deriveWarrantyItems(vehicle: Vehicle): Array<{ label: string; value: string }> {
+  const items: Array<{ label: string; value: string }> = []
 
+  const raw = (vehicle.warranty || '').trim()
   const age = new Date().getFullYear() - vehicle.year
-  if (age <= 1) items.push('Likely still within the primary factory coverage window.')
-  else if (age <= 4) items.push(`${vehicle.year} model — verify remaining factory coverage with the dealer.`)
-  else items.push('Factory warranty may be limited or expired. Confirm current coverage status.')
 
-  items.push('Ask about extended coverage or CPO options if warranty confidence matters to the buyer.')
+  if (raw) {
+    // Split into terms (e.g. "Basic 3 yr / 36,000 mi • Powertrain 5 yr / 60,000 mi")
+    const parts = raw.split(/\u2022|\u00B7|\.|\*|\||•|;|,/).map((s) => s.trim()).filter(Boolean)
+
+    for (const part of parts) {
+      // Try to parse patterns like "Basic 3 yr / 36,000 mi" or "Battery 8 yr / 120,000 mi"
+      const m = part.match(/^(.*?)(?:\b|\s)(\d+)\s*yr(?:s)?(?:\s*\/\s*([0-9,]+)\s*mi)?/i)
+      if (m) {
+        const name = m[1].trim() || 'Warranty'
+        const years = Number(m[2])
+        const miles = m[3] ? Number(m[3].replace(/,/g, '')) : undefined
+
+        const remainingYears = Number.isFinite(years) ? Math.max(0, years - age) : undefined
+        const remainingMiles = typeof miles === 'number' ? Math.max(0, miles - vehicle.mileage) : undefined
+
+        let value = ''
+        if (remainingYears && remainingYears > 0 && remainingMiles && remainingMiles > 0) {
+          value = `${remainingYears} yr${remainingYears > 1 ? 's' : ''} / ${remainingMiles.toLocaleString()} mi remaining`
+        } else if (remainingYears && remainingYears > 0) {
+          value = `${remainingYears} yr${remainingYears > 1 ? 's' : ''} remaining`
+        } else if (remainingMiles && remainingMiles > 0) {
+          value = `${remainingMiles.toLocaleString()} mi remaining`
+        } else {
+          value = 'Expired or likely expired'
+        }
+
+        items.push({ label: name, value })
+        continue
+      }
+
+      // If term mentions expired or cannot be parsed, present it as-is
+      if (/expired/i.test(part)) {
+        items.push({ label: part, value: 'Expired or likely expired' })
+      } else {
+        items.push({ label: part, value: 'Verify remaining coverage with dealer' })
+      }
+    }
+  } else {
+    // No warranty string available — infer from vehicle age
+    if (age <= 1) items.push({ label: 'Factory warranty', value: 'Likely still within primary factory coverage' })
+    else if (age <= 4) items.push({ label: 'Factory warranty', value: `${vehicle.year} model — verify remaining factory coverage with the dealer.` })
+    else items.push({ label: 'Factory warranty', value: 'Factory warranty may be limited or expired. Confirm current coverage status.' })
+  }
+
+  items.push({ label: 'Next step', value: 'Ask about extended coverage or CPO options if warranty confidence matters to the buyer.' })
   return items
 }
 
@@ -419,7 +460,7 @@ export default function VinDetailPage() {
         <AccordionSection title="🛡 Warranty Left">
           <div className="space-y-0">
             {warrantyItems.map((item) => (
-              <InfoRow key={item} label={item} value="" />
+              <InfoRow key={item.label} label={item.label} value={item.value} />
             ))}
           </div>
         </AccordionSection>
