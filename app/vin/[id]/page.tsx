@@ -496,12 +496,22 @@ export default function VinDetailPage() {
         </AccordionSection>
 
         <AccordionSection title="★ Features">
-          <div className="space-y-3">
+          <div style={{ columnCount: 2, columnGap: 12 }}>
             {features.length ? (
               features.map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <CheckCircle2 size={18} color="var(--purple)" className="mt-0.5 shrink-0" />
-                  <p className="text-[15px] leading-relaxed text-(--text-primary)">{item}</p>
+                <div
+                  key={item}
+                  style={{ display: 'inline-block', width: '100%', breakInside: 'avoid', padding: '6px 0' }}
+                >
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 size={18} color="var(--purple)" className="shrink-0" />
+                    <p
+                      className="text-[15px] text-(--text-primary)"
+                      style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                    >
+                      {item}
+                    </p>
+                  </div>
                 </div>
               ))
             ) : (
