@@ -200,11 +200,30 @@ function deriveWarrantyItems(vehicle: Vehicle): Array<{ label: string; value: st
 
 function deriveVehicleHistory(vehicle: Vehicle): Array<{ label: string; value: string }> {
   const items: Array<{ label: string; value: string }> = []
-  if (isMeaningful(vehicle.extColor)) items.push({ label: 'Exterior', value: String(vehicle.extColor) })
-  if (isMeaningful(vehicle.intColor)) items.push({ label: 'Interior', value: String(vehicle.intColor) })
-  if (vehicle.daysOnLot > 0) items.push({ label: 'Days on Lot', value: `${vehicle.daysOnLot} days` })
-  if (isMeaningful(vehicle.wheelSize)) items.push({ label: 'Wheels', value: String(vehicle.wheelSize) })
+
+  function titleCase(s: string) {
+    return s
+      .toLowerCase()
+      .split(/\s+/)
+      .map((w) => w[0]?.toUpperCase() + w.slice(1))
+      .join(' ')
+  }
+
+  if (isMeaningful(vehicle.extColor)) items.push({ label: 'Exterior', value: titleCase(String(vehicle.extColor)) })
+  if (isMeaningful(vehicle.intColor)) items.push({ label: 'Interior', value: titleCase(String(vehicle.intColor)) })
+
+  // Show days on lot explicitly, including when zero
+  if (typeof vehicle.daysOnLot === 'number') {
+    items.push({ label: 'Days on Lot', value: `${vehicle.daysOnLot} day${vehicle.daysOnLot === 1 ? '' : 's'}` })
+  }
+
+  if (isMeaningful(vehicle.wheelSize)) {
+    const wheel = String(vehicle.wheelSize).replace(/['"“”]/g, '')
+    items.push({ label: 'Wheels', value: wheel })
+  }
+
   if (vehicle.marketStats?.activeCount) items.push({ label: 'Similar Nearby', value: `${vehicle.marketStats.activeCount} listings` })
+
   if (!items.length) items.push({ label: 'History', value: 'Run a vehicle history report for ownership and accident details.' })
   return items
 }
@@ -483,16 +502,9 @@ export default function VinDetailPage() {
         </AccordionSection>
 
         <AccordionSection title="📋 Vehicle History">
-          <div className="grid grid-cols-1 gap-3">
+          <div className="space-y-0">
             {historyItems.map((item) => (
-              <div
-                key={item.label}
-                className="rounded-[10px] border p-3"
-                style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)' }}
-              >
-                <p className="text-[12px] font-semibold uppercase tracking-wide text-(--text-secondary)">{item.label}</p>
-                <p className="mt-1 text-[15px] font-medium text-(--text-primary)">{item.value}</p>
-              </div>
+              <InfoRow key={item.label} label={item.label} value={item.value} />
             ))}
           </div>
         </AccordionSection>
