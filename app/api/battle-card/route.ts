@@ -3,25 +3,43 @@ import { getAnthropicClient } from '@/lib/anthropic'
 export const runtime = 'nodejs'
 
 export async function POST(request: Request) {
-  const { vin, year, make, model, trim, mileage, price, daysOnLot } = await request.json()
+  const {
+    vin,
+    year,
+    make,
+    model,
+    trim,
+    mileage,
+    price,
+    daysOnLot,
+    warrantySummary,
+    marketStats,
+  } = await request.json()
 
   const anthropic = getAnthropicClient()
 
   const vehicleDesc = `${year} ${make} ${model}${trim ? ' ' + trim : ''}`
-  const prompt = `You are an expert automotive sales coach. Create a punchy AI sales brief for a salesperson about to show this vehicle.
+  let prompt = `You are an expert automotive sales coach. Create a punchy AI sales brief for a salesperson about to show this vehicle.
 
 Vehicle: ${vehicleDesc}
 VIN: ${vin}
 Price: $${Number(price).toLocaleString('en-US')}
 Mileage: ${Number(mileage).toLocaleString('en-US')} miles
-Days on lot: ${daysOnLot}
+Days on lot: ${daysOnLot}`
 
-Provide exactly 3 bullet points that help the salesperson close the deal. Each should be specific, value-focused, and persuasive. Reference the actual vehicle details.
+  if (warrantySummary) {
+    prompt += `\nWarranty summary: ${warrantySummary}`
+  } else if (request && request.headers && request.headers.get && request.headers.get('x-warranty')) {
+    // noop - preserve signature
+  }
 
-Format:
-• [Point 1]
-• [Point 2]
-• [Point 3]`
+  if (marketStats && typeof marketStats === 'object') {
+    if (marketStats.medianPrice) prompt += `\nMedian market price: $${Math.round(marketStats.medianPrice).toLocaleString()}`
+    if (marketStats.activeCount) prompt += `\nActive listings nearby: ${marketStats.activeCount}`
+    if (marketStats.avgMiles) prompt += `\nAverage comparable miles: ${Math.round(marketStats.avgMiles).toLocaleString()} mi`
+  }
+
+  prompt += `\n\nProvide exactly 3 bullet points that help the salesperson close the deal. Each should be specific, value-focused, and persuasive. Reference the actual vehicle details.\n\nFormat:\n• [Point 1]\n• [Point 2]\n• [Point 3]`
 
   const stream = anthropic.messages.stream({
     model: 'claude-haiku-4-5-20251001',
