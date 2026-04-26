@@ -66,7 +66,7 @@ function getCompellingFeatures(vehicle: Vehicle): string[] {
     .map((item) => item.label)
 }
 
-function deriveHighlights(vehicle: Vehicle): string[] {
+function deriveHighlights(vehicle: Vehicle, includeDaysOnLot: boolean): string[] {
   const items: string[] = []
   const seen = new Set<string>()
 
@@ -98,7 +98,7 @@ function deriveHighlights(vehicle: Vehicle): string[] {
   } catch {
     if (isMeaningful(vehicle.warranty)) add(`Warranty: ${vehicle.warranty}`)
   }
-  if (vehicle.daysOnLot > 0) {
+  if (includeDaysOnLot && vehicle.daysOnLot > 0) {
     add(vehicle.daysOnLot <= 14 ? `${vehicle.daysOnLot} days on lot — fresh inventory` : `${vehicle.daysOnLot} days on lot`)
   }
 
@@ -354,7 +354,7 @@ export default function VinDetailPage() {
   }
 
   const { year, make, model, trim, mileage, price, daysOnLot, imageUrl } = vehicle
-  const highlights = deriveHighlights(vehicle)
+  const highlights = deriveHighlights(vehicle, customerMode)
   const performanceItems = [
     { label: 'Engine', value: vehicle.engine },
     { label: 'Horsepower', value: vehicle.horsepower },
