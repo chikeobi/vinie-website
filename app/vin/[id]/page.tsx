@@ -260,6 +260,13 @@ export default function VinDetailPage() {
   const [vehicle, setVehicle] = useState<Vehicle | null>(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
+  const [historyReport, setHistoryReport] = useState<null | {
+    provider: string
+    fetchedAt: number
+    count: number
+    items: Array<{ component: string; summary: string; remedy?: string }>
+    summaryText?: string
+  }>(null)
 
   useEffect(() => {
     if (!id) return
@@ -297,6 +304,28 @@ export default function VinDetailPage() {
       setLoading(false)
     })()
   }, [id, user, currentDealershipId])
+
+  useEffect(() => {
+    if (!vehicle) return
+    let cancelled = false
+    ;(async () => {
+      try {
+        const resp = await fetch('/api/history-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ vin: vehicle.vin }),
+        })
+        if (!resp.ok) return
+        const json = await resp.json()
+        if (!cancelled) setHistoryReport(json)
+      } catch {
+        // ignore
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [vehicle])
 
   if (loading) {
     return (
@@ -503,6 +532,19 @@ export default function VinDetailPage() {
 
         <AccordionSection title="📋 Vehicle History">
           <div className="space-y-0">
+            {historyReport && historyReport.count > 0 && (
+              <>
+                <InfoRow label={`Recalls (${historyReport.provider})`} value={`${historyReport.count} found`} />
+                {historyReport.items.map((it, idx) => (
+                  <InfoRow
+                    key={`recall-${idx}`}
+                    label={it.component || `Recall ${idx + 1}`}
+                    value={it.summary ? (it.summary.length > 120 ? it.summary.slice(0, 120) + '…' : it.summary) : 'Details available'}
+                  />
+                ))}
+              </>
+            )}
+
             {historyItems.map((item) => (
               <InfoRow key={item.label} label={item.label} value={item.value} />
             ))}
