@@ -1,16 +1,19 @@
 'use client'
 
 import { useEffect, useState, useMemo, FormEvent } from 'react'
-import { Bookmark, Clock3, Eye, EyeOff, LayoutGrid, Search, Sparkles, Star, TrendingDown } from 'lucide-react'
+import { Bookmark, Clock3, Eye, EyeOff, LayoutGrid, Search, Sparkles, Star, TrendingDown, X } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useCustomerMode } from '@/context/CustomerModeContext'
-import { getInventory } from '@/lib/firestore'
 import type { Vehicle } from '@/lib/types'
 import PageHeader from '@/components/PageHeader'
 import VehicleCard from '@/components/VehicleCard'
 import FilterChip from '@/components/FilterChip'
+import { getDealershipInventory, type InventoryVehicle } from '@/lib/inventoryService'
+import { getScannedCars, removeScannedCar, type StoredScan } from '@/lib/scannedCarsStorage'
+import SwipeableCard from '@/components/SwipeableCard'
 
 type Filter = 'all' | 'pricedrop' | 'specials' | 'aged' | 'pinned' | 'fresh'
+type PipelineVehicle = InventoryVehicle | StoredScan
 
 const FILTERS: { id: Filter; label: string; icon: React.ReactNode }[] = [
   { id: 'all', label: 'All', icon: <LayoutGrid size={14} /> },
@@ -24,15 +27,38 @@ const FILTERS: { id: Filter; label: string; icon: React.ReactNode }[] = [
 export default function InventoryPage() {
   const { currentDealershipId } = useAuth()
   const { customerMode, toggleCustomerMode } = useCustomerMode()
-  const [vehicles, setVehicles] = useState<Vehicle[]>([])
+  const [vehicles, setVehicles] = useState<PipelineVehicle[]>([])
   const [loading, setLoading] = useState(true)
   const [searchInput, setSearchInput] = useState('')
-  const [search, setSearch] = useState('')
   const [activeFilter, setActiveFilter] = useState<Filter>('all')
 
   useEffect(() => {
-    getInventory(currentDealershipId).then((v) => {
-      setVehicles(v)
+    Promise.all([
+      getDealershipInventory(currentDealershipId),
+      getScannedCars(),
+    ]).then(([inventoryCars, scannedCars]) => {
+      const merged = new Map<string, PipelineVehicle>()
+      inventoryCars.forEach((car) => merged.set(car.vin, car))
+      scannedCars.forEach((car) => {
+        const existing = merged.get(car.vin)
+        if (!existing) {
+          merged.set(car.vin, car)
+          return
+        }
+        merged.set(car.vin, {
+          ...car,
+          ...existing,
+          imageUrl: existing.imageUrl || car.imageUrl,
+          features: existing.features?.length ? existing.features : car.features,
+          marketStats: existing.marketStats ?? car.marketStats,
+        })
+      })
+      const sorted = Array.from(merged.values()).sort((a, b) => {
+        const aTs = 'scannedAt' in a ? a.scannedAt : (a.updatedAt ?? a.uploadedAt ?? 0)
+        const bTs = 'scannedAt' in b ? b.scannedAt : (b.updatedAt ?? b.uploadedAt ?? 0)
+        return bTs - aTs
+      })
+      setVehicles(sorted)
       setLoading(false)
     })
   }, [currentDealershipId])
@@ -44,8 +70,8 @@ export default function InventoryPage() {
     else if (activeFilter === 'aged') list = list.filter((v) => v.isAged || v.daysOnLot >= 45)
     else if (activeFilter === 'pinned') list = list.filter((v) => v.isPinned)
     else if (activeFilter === 'fresh') list = list.filter((v) => v.isFresh || v.daysOnLot <= 7)
-    if (search.trim()) {
-      const q = search.toLowerCase()
+    if (searchInput.trim()) {
+      const q = searchInput.toLowerCase()
       list = list.filter(
         (v) =>
           v.make.toLowerCase().includes(q) ||
@@ -55,11 +81,15 @@ export default function InventoryPage() {
       )
     }
     return list
-  }, [vehicles, activeFilter, search])
+  }, [vehicles, activeFilter, searchInput])
 
   function handleSearchSubmit(e: FormEvent) {
     e.preventDefault()
-    setSearch(searchInput.trim())
+  }
+
+  async function handleDelete(vin: string) {
+    setVehicles((prev) => prev.filter((vehicle) => vehicle.vin !== vin))
+    await removeScannedCar(vin)
   }
 
   return (
@@ -97,6 +127,16 @@ export default function InventoryPage() {
               placeholder="Search by make, model, VIN..."
               className="flex-1 bg-transparent text-[15px] text-(--text-primary) outline-none placeholder:text-(--text-secondary)"
             />
+            {searchInput.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setSearchInput('')}
+                className="flex h-7 w-7 items-center justify-center shrink-0"
+                aria-label="Clear search"
+              >
+                <X size={16} color="var(--text-secondary)" />
+              </button>
+            )}
             <button
               type="submit"
               className="h-8 px-3 rounded-[10px] text-[13px] font-semibold text-white shrink-0"
@@ -128,7 +168,13 @@ export default function InventoryPage() {
           : filtered.length === 0
             ? <p className="text-center text-(--text-secondary) text-[15px] py-16">No vehicles found</p>
             : filtered.map((v) => (
-                <VehicleCard key={v.id} vehicle={v} showCustomerMode={customerMode} />
+                'source' in v && v.source === 'scan' ? (
+                  <SwipeableCard key={v.vin} onDelete={() => handleDelete(v.vin)}>
+                    <VehicleCard vehicle={v} scannedAt={v.scannedAt} showCustomerMode={customerMode} />
+                  </SwipeableCard>
+                ) : (
+                  <VehicleCard key={v.vin} vehicle={v} showCustomerMode={customerMode} />
+                )
               ))}
       </div>
     </div>

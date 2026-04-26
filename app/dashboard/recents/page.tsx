@@ -1,32 +1,27 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/context/AuthContext'
 import { useCustomerMode } from '@/context/CustomerModeContext'
-import { deleteRecentScan, getRecentScans } from '@/lib/firestore'
-import type { RecentVehicle } from '@/lib/types'
+import { getScannedCars, removeScannedCar, type StoredScan } from '@/lib/scannedCarsStorage'
 import PageHeader from '@/components/PageHeader'
 import VehicleCard from '@/components/VehicleCard'
 import SwipeableCard from '@/components/SwipeableCard'
 
 export default function RecentsPage() {
-  const { user, currentDealershipId } = useAuth()
   const { customerMode } = useCustomerMode()
-  const [vehicles, setVehicles] = useState<RecentVehicle[]>([])
+  const [vehicles, setVehicles] = useState<StoredScan[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!user) return
-    getRecentScans(user.uid, currentDealershipId).then((v) => {
+    getScannedCars().then((v) => {
       setVehicles(v)
       setLoading(false)
     })
-  }, [user, currentDealershipId])
+  }, [])
 
   async function handleDelete(vin: string) {
-    if (!user) return
     setVehicles((prev) => prev.filter((vehicle) => vehicle.vin !== vin))
-    await deleteRecentScan(vin, user.uid, currentDealershipId)
+    await removeScannedCar(vin)
   }
 
   return (

@@ -5,22 +5,69 @@ import { useState, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowRight } from 'lucide-react'
 import PageHeader from '@/components/PageHeader'
+import { useAuth } from '@/context/AuthContext'
+import { getInventoryVehicleByVin } from '@/lib/inventoryService'
+import { saveScannedCar } from '@/lib/scannedCarsStorage'
+import { getCarDetails } from '@/lib/vinLookupService'
+import { isValidVin, isVinFormatValid } from '@/lib/vinValidation'
 
 const ScanCamera = dynamic(() => import('@/components/ScanCamera'), { ssr: false })
 
 export default function ScanPage() {
   const router = useRouter()
+  const { currentDealershipId } = useAuth()
   const [vin, setVin] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    const cleaned = vin.trim().toUpperCase()
-    if (!/^[A-HJ-NPR-Z0-9]{17}$/i.test(cleaned)) {
-      setError('Please enter a valid 17-character VIN.')
+  async function resolveAndNavigate(rawVin: string) {
+    const normalizedVin = rawVin.trim().toUpperCase()
+    const inventoryVehicle = await getInventoryVehicleByVin(currentDealershipId, normalizedVin).catch(() => null)
+    if (inventoryVehicle) {
+      router.push(`/vin/${normalizedVin}`)
       return
     }
-    router.push(`/vin/${cleaned}`)
+
+    const carDetails = await getCarDetails(normalizedVin)
+    await saveScannedCar(carDetails)
+    router.push(`/vin/${normalizedVin}`)
+  }
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    const cleaned = vin.trim().toUpperCase()
+    if (!isVinFormatValid(cleaned)) {
+      setError('VIN must be 17 characters.')
+      return
+    }
+
+    setLoading(true)
+    setError('')
+    try {
+      await resolveAndNavigate(cleaned)
+      setVin('')
+    } catch {
+      setError('Failed to look up VIN. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleDetected(rawVin: string) {
+    const cleaned = rawVin.trim().toUpperCase()
+    if (!isValidVin(cleaned)) {
+      setError('Scanned code is not a valid VIN. Enter it manually above.')
+      return
+    }
+
+    setLoading(true)
+    setError('')
+    try {
+      await resolveAndNavigate(cleaned)
+    } catch {
+      setError('Could not look up VIN. Enter it manually above.')
+      setLoading(false)
+    }
   }
 
   return (
@@ -40,8 +87,9 @@ export default function ScanPage() {
             />
             <button
               type="submit"
+              disabled={loading || vin.length < 17}
               className="h-[52px] min-w-[52px] rounded-[var(--radius-card)] flex items-center justify-center shrink-0 active:opacity-80 transition-opacity"
-              style={{ backgroundColor: 'var(--purple)' }}
+              style={{ backgroundColor: 'var(--purple)', opacity: loading || vin.length < 17 ? 0.4 : 1 }}
               aria-label="Look up VIN"
             >
               <ArrowRight size={20} color="white" />
@@ -52,7 +100,7 @@ export default function ScanPage() {
 
         <div>
           <div className="h-[460px]">
-            <ScanCamera />
+            <ScanCamera onDetected={handleDetected} />
           </div>
         </div>
       </div>

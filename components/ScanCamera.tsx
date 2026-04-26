@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Flashlight, X, Camera } from 'lucide-react'
 
 interface Props {
-  onDetected?: (vin: string) => void
+  onDetected?: (vin: string) => void | Promise<void>
 }
 
 export default function ScanCamera({ onDetected }: Props) {
@@ -24,7 +24,7 @@ export default function ScanCamera({ onDetected }: Props) {
       const controls = await reader.decodeFromVideoDevice(
         undefined,
         videoRef.current!,
-        (result) => {
+        async (result) => {
           if (result && !detectedRef.current) {
             const text = result.getText()
             // Basic VIN validation: 17 alphanumeric chars
@@ -33,7 +33,7 @@ export default function ScanCamera({ onDetected }: Props) {
               navigator.vibrate?.(200)
               controls.stop()
               if (onDetected) {
-                onDetected(text.toUpperCase())
+                await onDetected(text.toUpperCase())
               } else {
                 router.push(`/vin/${text.toUpperCase()}`)
               }

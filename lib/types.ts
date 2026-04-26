@@ -10,6 +10,30 @@ export interface Vehicle {
   daysOnLot: number
   imageUrl?: string
   dealershipId: string
+  engine?: string
+  horsepower?: string
+  torque?: string
+  transmission?: string
+  drivetrain?: string
+  mpg?: string
+  warranty?: string
+  extColor?: string
+  intColor?: string
+  wheelSize?: string
+  features?: string[]
+  marketStats?: {
+    medianPrice: number
+    minPrice: number
+    maxPrice: number
+    avgMiles: number
+    activeCount: number
+    listingPrice: number
+  }
+  similarCars?: Array<{
+    title: string
+    location: string
+    price: string
+  }>
   isPinned?: boolean
   isSpecial?: boolean
   hasPriceDrop?: boolean
