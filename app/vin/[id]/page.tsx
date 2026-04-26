@@ -587,6 +587,12 @@ export default function VinDetailPage() {
                     value={it.summary ? (it.summary.length > 120 ? it.summary.slice(0, 120) + '…' : it.summary) : 'Details available'}
                   />
                 ))}
+                {/* Show attached report link if available */}
+                {/** @ts-ignore */ historyReport.url && (
+                  <div className="mt-2">
+                    <a href={(historyReport as any).url} target="_blank" rel="noreferrer" className="text-(--purple) font-semibold">View attached report</a>
+                  </div>
+                )}
               </>
             ) : (
               <>
@@ -607,8 +613,16 @@ export default function VinDetailPage() {
                           })
                           if (!resp.ok) throw new Error('attach failed')
                           const j = await resp.json()
-                          // reflect immediately
-                          setHistoryReport({ provider: j.historyReport.provider, fetchedAt: j.historyReport.fetchedAt, count: 0, items: [], summaryText: j.historyReport.summary })
+                          // reflect immediately (include url if provided)
+                          setHistoryReport({
+                            provider: j.historyReport.provider,
+                            fetchedAt: j.historyReport.fetchedAt,
+                            count: 0,
+                            items: [],
+                            summaryText: j.historyReport.summary,
+                            // @ts-ignore
+                            url: j.historyReport.url,
+                          } as any)
                           alert('Report attached')
                         } catch (e) {
                           alert('Failed to attach report')
