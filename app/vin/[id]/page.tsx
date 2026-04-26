@@ -267,7 +267,6 @@ export default function VinDetailPage() {
     items: Array<{ component: string; summary: string; remedy?: string }>
     summaryText?: string
   }>(null)
-  const { user } = useAuth()
   const [stateReport, setStateReport] = useState<null | { available: boolean; message?: string; result?: any }>(null)
 
   useEffect(() => {
