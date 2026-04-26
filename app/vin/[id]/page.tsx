@@ -576,7 +576,7 @@ export default function VinDetailPage() {
                 <InfoRow label="State DMV" value={stateReport.message ?? 'Not available'} />
               )
             )}
-            {historyReport && historyReport.count > 0 && (
+            {historyReport && historyReport.count > 0 ? (
               <>
                 <InfoRow label={`Recalls (${historyReport.provider})`} value={`${historyReport.count} found`} />
                 {historyReport.items.map((it, idx) => (
@@ -587,11 +587,9 @@ export default function VinDetailPage() {
                   />
                 ))}
               </>
+            ) : (
+              <InfoRow label="Vehicle history" value="No full history report available" />
             )}
-
-            {historyItems.map((item) => (
-              <InfoRow key={item.label} label={item.label} value={item.value} />
-            ))}
           </div>
         </AccordionSection>
 
