@@ -267,6 +267,7 @@ export default function VinDetailPage() {
     items: Array<{ component: string; summary: string; remedy?: string }>
     summaryText?: string
   }>(null)
+  const [stateReport, setStateReport] = useState<null | { available: boolean; message?: string; result?: any }>(null)
 
   useEffect(() => {
     if (!id) return
@@ -532,6 +533,39 @@ export default function VinDetailPage() {
 
         <AccordionSection title="📋 Vehicle History">
           <div className="space-y-0">
+            <div className="flex items-center justify-between gap-2">
+              <div />
+              <button
+                onClick={async () => {
+                  const st = prompt('Enter 2-letter state code (e.g. CA, NY) to query DMV/reseller:')
+                  if (!st || !vehicle) return
+                  try {
+                    setStateReport(null)
+                    const resp = await fetch('/api/state-history', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ vin: vehicle.vin, state: st.trim().toUpperCase() }),
+                    })
+                    if (!resp.ok) throw new Error('failed')
+                    const j = await resp.json()
+                    setStateReport(j)
+                  } catch (e) {
+                    setStateReport({ available: false, message: 'Lookup failed' })
+                  }
+                }}
+                className="text-[13px] text-(--purple) font-semibold"
+              >
+                Check state DMV
+              </button>
+            </div>
+
+            {stateReport && (
+              stateReport.available ? (
+                <InfoRow label="State DMV" value={String(stateReport.result?.provider ?? 'Data')} />
+              ) : (
+                <InfoRow label="State DMV" value={stateReport.message ?? 'Not available'} />
+              )
+            )}
             {historyReport && historyReport.count > 0 && (
               <>
                 <InfoRow label={`Recalls (${historyReport.provider})`} value={`${historyReport.count} found`} />
